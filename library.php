@@ -11,8 +11,14 @@ function page_start($title) {
 <BODY>
 <HR />
 <H2>$title</H2>
-<p align='right'><a href='index.php'><b>Home</b></a><HR />
+<p align='right'><a href='index.php'><b>Home</b></a></p><HR />
 ";
+};
+
+function page_end() {
+  echo "
+</BODY>
+</HTML>";
 };
 
 
