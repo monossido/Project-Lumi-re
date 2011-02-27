@@ -2,14 +2,9 @@
 require("configure.php");
 require("library.php");
 session_start();
+page_start("Project Lumi&eacute;re - Film");
 
-
-echo "<HTML>
-<HEAD><TITLE>$_GET[titolo]</TITLE></HEAD>
-<BODY>
-<HR />
-<br />
-<center><H2>$_GET[titolo]</H2></center>";
+echo "<p align='center'><H2>$_GET[titolo]</H2></p>";
 
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die("Connessione al server MySQL fallita!");
