@@ -9,43 +9,42 @@ echo '<HTML>
 <HR />
 <center><img src="images/Logo1.0A2.jpg" border="0"></center>';
 
-
-if ($_POST['login']) {
-  /* recupera i dati immessi */
-  $login=$_POST['username'];
-  $password=$_POST['password'];
-if (($login) && (SHA1($password) == get_pwd($login)))
-{
-	$_SESSION['logged']=$login;
-}
-}
-
   $conn=mysql_connect(dbhost, dbuser, dbpwd)
     or die("Connessione al server MySQL fallita!");
   mysql_select_db(dbname);
 
+if ($_POST['login']) {
+	  /* recupera i dati immessi */
+	  $login=$_POST['username'];
+	  $password=$_POST['password'];
+
+	if (($login) && (SHA1($password) == get_pwd($login)))
+	{
+		$_SESSION['logged']=$login;
+	}
+}
+
 if(isset($_SESSION['logged']))
 {
-
-	$query="SELECT Voto FROM Utenti WHERE Username='".$_SESSION['logged']."'";
-
-	# Solo per vedere se l'utente è anche admin
-
-	$query2="SELECT amministratore FROM Utenti WHERE Username='".$_SESSION['logged']."'";
-	$result2=mysql_query($query2, $conn)
-	  or die("Query fallita!" . mysql_error());
-	$admin=mysql_fetch_array($result2);
-	# echo $admin['amministratore'];
-	if ($admin['amministratore']==1)
-		echo "<p align='right'><font color=red>Vai alla pagina di <a href=admin.php>ADMIN</a></font></p>";
-	# Fine
-	# Se è bau
-		if ($login=='bau')	echo "<p align=right>Vai alla pagina di <a href=inserisci-film.php>inserimento film</a></p>";
+	$query="SELECT Voto,amministratore FROM Utenti WHERE Username='".$_SESSION['logged']."'";
 	$result=mysql_query($query, $conn)
 	  or die("Query fallita!" . mysql_error());
-	$voto=mysql_fetch_array($result);
+	$utente=mysql_fetch_array($result);
+
+	$query2="SELECT * FROM Stato";
+	$result2=mysql_query($query2, $conn)
+	  or die("Query fallita!" . mysql_error());
+	$stato=mysql_fetch_array($result2);
+
+	# echo $admin['amministratore'];
+	if ($utente['amministratore'])
+	{
+		echo "<p align='right'><font color=red>Vai alla pagina di <a href=admin.php>ADMIN</a></font></p>";
+		echo "<p align=right>Vai alla pagina di <a href=inserisci-film.php>inserimento film</a></p>";
+	}
+
 	echo "<p align='right'>Ciao, <b>".$_SESSION['logged'];
-	if($voto['Voto']=="0")	
+	if(!$utente['Voto'])	
 	{
 		echo "</b><br /><em>Devi ancora votare, cosa aspetti?</em>";
 	}
@@ -60,8 +59,16 @@ if(isset($_SESSION['logged']))
 {
 	echo "<p align='right'>Effettua il <a href='login.php'>login</a> o <a href='register.php'>registrati</a><HR />";
 }
-
 echo "</table>";
+//A che round siamo?
+if($stato['Round']==1)
+{
+	echo "Il primo round &egrave gi&agrave finito, vai ai risultati parziali per votare per il secondo round";
+
+}else if($stato['Round']==2)
+{
+	echo "Il secondo round &egrave gi&agrave finito, il film è stato scelto vai ai risultati per scoprire quale film si guarder&agrave";
+}
 echo "<p align='center'>> Visualizza i <a href='risultati.php'>risultati</a> <b>parziali <</b></p>";
 
 $visti=$_GET['visti'];
@@ -128,7 +135,8 @@ while($row=mysql_fetch_array($result))
 		echo "<td>No</td>";
 	else
 		echo "<td>Si</td>";
-	if(isset($_SESSION['logged']) && $voto['Voto']=="0")
+	//Per votare dalla home bisogna, essere loggati, non aver già votato, essere ancora nel primo round
+	if(isset($_SESSION['logged']) && !$utente['Voto'] && !$stato['Round'])
 		echo "<td><a href='vota.php?id=".$row['id_film']."'>Vota</a></td>";
 	else echo "<td width='8%'><em>Non puoi votare</em></td>";
 	echo "</tr>";
@@ -138,5 +146,5 @@ echo "</table>";
 # echo "<p align='center'>Visualizza i <a href='risultati.php'>risultati</a> <b>parziali</b></p>";
 
 
-echo '</HEAD></HTML>';
+echo '</BODY></HEAD></HTML>';
 
