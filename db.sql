@@ -25,6 +25,24 @@ CREATE TABLE IF NOT EXISTS `Film` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Stato`
+--
+
+CREATE TABLE IF NOT EXISTS `Stato` (
+  `Round` tinyint(4) NOT NULL,
+  `RegistrazioniAperte` tinyint(1) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Stato`
+--
+
+INSERT INTO `Stato` (`Round`, `RegistrazioniAperte`) VALUES
+(0, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Utenti`
 --
 
