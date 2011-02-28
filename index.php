@@ -7,7 +7,7 @@ echo '<HTML>
 <HEAD><TITLE>Project Lumi&eacute;re 0.1</TITLE></HEAD>
 <BODY>
 <HR />
-<center><img src="images/Logo1.0A2.jpg" border="0"></center>';
+<center><img src="images/logo0.2e.jpg" border="0"></center>';
 
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die("Connessione al server MySQL fallita!");
