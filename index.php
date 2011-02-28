@@ -9,9 +9,14 @@ echo '<HTML>
 <HR />
 <center><img src="images/Logo1.0A2.jpg" border="0"></center>';
 
-  $conn=mysql_connect(dbhost, dbuser, dbpwd)
-    or die("Connessione al server MySQL fallita!");
-  mysql_select_db(dbname);
+$conn=mysql_connect(dbhost, dbuser, dbpwd)
+	or die("Connessione al server MySQL fallita!");
+mysql_select_db(dbname);
+
+$query2="SELECT * FROM Stato";
+$result2=mysql_query($query2, $conn)
+  or die("Query fallita!" . mysql_error());
+$stato=mysql_fetch_array($result2);
 
 if ($_POST['login']) {
 	  /* recupera i dati immessi */
@@ -31,19 +36,14 @@ if(isset($_SESSION['logged']))
 	  or die("Query fallita!" . mysql_error());
 	$utente=mysql_fetch_array($result);
 
-	$query2="SELECT * FROM Stato";
-	$result2=mysql_query($query2, $conn)
-	  or die("Query fallita!" . mysql_error());
-	$stato=mysql_fetch_array($result2);
-
 	# echo $admin['amministratore'];
 	if ($utente['amministratore'])
 	{
-		echo "<p align='right'><font color=red>Vai alla pagina di <a href=admin.php>ADMIN</a></font></p>";
-		echo "<p align=right>Vai alla pagina di <a href=inserisci-film.php>inserimento film</a></p>";
+		echo "<div align='left'><font color=red>Vai alla pagina di <a href=admin.php>ADMIN</a></font><br />";
+		echo "Vai alla pagina di <a href=inserisci-film.php>inserimento film</a></div>";
 	}
 
-	echo "<p align='right'>Ciao, <b>".$_SESSION['logged'];
+	echo "<div align='right'>Ciao, <b>".$_SESSION['logged'];
 	if(!$utente['Voto'])	
 	{
 		echo "</b><br /><em>Devi ancora votare, cosa aspetti?</em>";
@@ -52,7 +52,7 @@ if(isset($_SESSION['logged']))
 	{
 		echo "</b><br /><em>Questa settimana hai gi&agrave votato</em>";
 	}
-	echo "</p><HR />";
+	echo "</div><HR />";
 	echo "<p align='right'><a href='logout.php'>Logout</a></p>";
 
 }else
@@ -60,16 +60,23 @@ if(isset($_SESSION['logged']))
 	echo "<p align='right'>Effettua il <a href='login.php'>login</a> o <a href='register.php'>registrati</a><HR />";
 }
 echo "</table>";
-//A che round siamo?
-if($stato['Round']==1)
+if($stato['VotazioniAperte'])
 {
-	echo "Il primo round &egrave gi&agrave finito, vai ai risultati parziali per votare per il secondo round";
+	//A che round siamo?
+	if($stato['Round']==1)
+	{
+		echo "Il primo round &egrave gi&agrave finito, vai ai risultati parziali per votare per il secondo round";
 
-}else if($stato['Round']==2)
+	}else if($stato['Round']==2)
+	{
+		echo "Il secondo round &egrave gi&agrave finito, il film è stato scelto vai ai risultati per scoprire quale film si guarder&agrave";
+	}
+	echo "<p align='center'> Visualizza i <a href='risultati.php'>risultati</a> <b>parziali <</b></p>";
+}else
 {
-	echo "Il secondo round &egrave gi&agrave finito, il film è stato scelto vai ai risultati per scoprire quale film si guarder&agrave";
+	echo "<p align='center'>Votazioni terminate! Visualizza i <a href='risultati.php'>risultati</a> <b></b></p>";
 }
-echo "<p align='center'>> Visualizza i <a href='risultati.php'>risultati</a> <b>parziali <</b></p>";
+
 
 $visti=$_GET['visti'];
 $risoluzione=$_GET['risoluzione'];
