@@ -42,4 +42,29 @@ function get_pwd($login) {
     return FALSE;
 };
 
+function get_film() {
+	/* connessione al server */
+	$conn=mysql_connect(dbhost, dbuser, dbpwd)
+		or die("Connessione al server MySQL fallita!");
+	mysql_select_db(dbname);
+
+	$query="SELECT * FROM Film WHERE voti>=1 ORDER BY voti DESC";
+	$result=mysql_query($query, $conn)
+		or die("Query fallita!" . mysql_error());
+	$film=mysql_fetch_array($result);
+	$i=3;
+	$voti=0;
+	for(;$film[$i]['voti']==$film[$i-1]['voti'];$i++){}
+	for($z=0;$z<=$i;$z++)
+	{
+		$voti=$voti+$film[$z]['voti'];
+	}
+	if($film[0]['voti']>$voti/2)
+		return 1;
+	else
+		return $i+1;
+
+};
+
+
 ?>
