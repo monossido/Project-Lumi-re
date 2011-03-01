@@ -1,6 +1,35 @@
+Copyright 2011
+	Lorenzo Braghetto monossido@lorenzobraghetto.com
+	Ettore Bauchensky
+	Edoardo Pairisi
+
+----------------------------------------------------------------------------------------
+
+Project Lumiére is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-----------------------------------------------------------------------------------------
 
 Project Lumiére è un CMS che aiuta la gestione delle votazioni degli utenti finalizzate a scegliere quale dato film vedere.
 Non ci sono versioni ufficiali ne alcun tipo di ETA.
 
 ...
 There is not official build or any kind of ETA.
+
+-----------------------------------------------------------------------------------------
+
+
+
+Some code/libraries are used in the project:
+Libchart (GPL v3)
+	http://naku.dohcrew.com/libchart/
