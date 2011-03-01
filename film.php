@@ -33,7 +33,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			echo "Il film non &egrave; stato ancora visto, quindi non si pu&ograve; ancora votare!";
 		else	# Se è stato visto
 		{
-			// MEDIA MATEMATICA DEI VOTI RICEVUTI DAL FILM
+			// MEDIA ARITMETICA DEI VOTI RICEVUTI DAL FILM
 			$query5="SELECT sum(voto) as somma FROM Votazioni WHERE id_film='$id_film'";
 			$result5=mysql_query($query5, $conn)
 			  or die("Query fallita!" . mysql_error());
@@ -48,7 +48,9 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			// echo "utenti="; echo $utenti['utenti'];
 			$n_utenti=$utenti['utenti'];	// Numero di utenti che ha votato il film
 			$media=$somma_tot/$n_utenti;
-			echo "<center>Voto medio del film: $media, hanno votato in: $n_utenti";
+			echo "<center>Voto medio del film: $media,";
+			if ($n_utenti==1) echo " ha votato un solo utente.";
+			else	echo " hanno votato in $n_utenti.";
 			echo "<br>";
 			for ($i=0;$i<$media;$i++)
 				echo"* ";
