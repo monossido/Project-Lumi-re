@@ -31,10 +31,15 @@ if(!$test)
 {
 	if(SHA1($passw) == get_pwd($user))
 	{
+		$conn=mysql_connect(dbhost, dbuser, dbpwd)
+			or die("Connessione al server MySQL fallita!");
+		mysql_select_db(dbname);
+
 		$query="SELECT amministratore FROM Utenti WHERE Username='$user'";
 		$result=mysql_query($query, $conn)
 		  or die("Query fallita!" . mysql_error());
 		$admin=mysql_fetch_array($result);
+
 
 		if ($admin['amministratore']==1)
 		{
