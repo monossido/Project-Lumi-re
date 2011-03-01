@@ -33,6 +33,28 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			echo "Il film non &egrave; stato ancora visto, quindi non si pu&ograve; ancora votare!";
 		else	# Se è stato visto
 		{
+			// MEDIA MATEMATICA DEI VOTI RICEVUTI DAL FILM
+			$query5="SELECT sum(voto) as somma FROM Votazioni WHERE id_film='$id_film'";
+			$result5=mysql_query($query5, $conn)
+			  or die("Query fallita!" . mysql_error());
+			$voti=mysql_fetch_array($result5);
+			$somma_tot=$voti['somma'];	// Somma totale dei voti ricevuti dal film		
+			// $num_voti=$voti['idvotazione'];
+			// echo "voti="; echo $voti['somma'];
+			$query6="SELECT count(*) as utenti FROM Votazioni WHERE id_film='$id_film'";
+			$result6=mysql_query($query6, $conn)
+			  or die("Query fallita!" . mysql_error());
+			$utenti=mysql_fetch_array($result6);
+			// echo "utenti="; echo $utenti['utenti'];
+			$n_utenti=$utenti['utenti'];	// Numero di utenti che ha votato il film
+			$media=$somma_tot/$n_utenti;
+			echo "<center>Voto medio del film: $media, hanno votato in: $n_utenti";
+			echo "<br>";
+			for ($i=0;$i<$media;$i++)
+				echo"* ";
+			echo "</center>";
+			
+			// FINE MEDIA
 			// CONTROLLA SE L'UTENTE HA GIA' VOTATO IL FILM
 			$query4="SELECT * FROM Votazioni WHERE id_film='$id_film' AND id_utente='$id_utente'";
 			$result4=mysql_query($query4, $conn)
@@ -41,7 +63,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			$voto=$votazioni['voto'];
 			$id=$votazioni['idvotazione'];	// PRELEVA L'ID DELLA VOTAZIONE
 			// echo "idvotazioni="; echo $id;
-			if ($id!=0)	// SE L'ID DELLA VOTAZIONE E' DIVERSO DA 0 VUOL DIRE CHE L'UTENTE NON HA ANCORA VOTATO QUEL FILM
+			if ($id!=0)	// SE L'ID DELLA VOTAZIONE E' DIVERSO DA 0 VUOL DIRE CHE L'UTENTE HA VOTATO QUEL FILM
 				echo "Hai gi&agrave votato questo film e il tuo voto &egrave stato $voto";
 			// FINE CONTROLLO
 			else 
