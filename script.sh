@@ -62,7 +62,7 @@
 		fi
 		temp3=`mkvinfo $i | grep "Duration" | sed -e 's/^.*(//g' | sed -e 's/\..*$//g'`
 		nome=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$i")
-		wget --post-data "username=$args[0]&password=$args[1]" -O /dev/null -q "http://monossido.ath.cx/cinema/inserisci.php?titoli=$nome&ris=$ris&lin=$lingua&dur=$temp3"
+		wget --post-data "username=$1&password=$2" -O /dev/null -q "http://monossido.ath.cx/cinema/inserisci.php?titoli=$nome&ris=$ris&lin=$lingua&dur=$temp3"
 		(( ++a ))
 	done
 	echo -e "------------------------------------------\n"
