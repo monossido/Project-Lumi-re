@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS `Film` (
   `durata` varchar(40) NOT NULL,
   `voti` tinyint(4) NOT NULL,
   `passato` tinyint(1) NOT NULL,
-  `giudizio` tinyint(2) NOT NULL,
   PRIMARY KEY  (`id_film`),
   UNIQUE KEY `titolo` (`titolo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
 
 -- --------------------------------------------------------
 
@@ -47,15 +47,16 @@ CREATE TABLE IF NOT EXISTS `Film` (
 
 CREATE TABLE IF NOT EXISTS `Stato` (
   `Round` tinyint(4) NOT NULL,
-  `RegistrazioniAperte` tinyint(1) NOT NULL
+  `RegistrazioniAperte` tinyint(1) NOT NULL,
+  `VotazioniAperte` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Stato`
 --
 
-INSERT INTO `Stato` (`Round`, `RegistrazioniAperte`) VALUES
-(0, 1);
+INSERT INTO `Stato` (`Round`, `RegistrazioniAperte`, `VotazioniAperte`) VALUES
+(0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -71,3 +72,20 @@ CREATE TABLE IF NOT EXISTS `Utenti` (
   `amministratore` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id_utente`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Votazioni`
+--
+
+CREATE TABLE IF NOT EXISTS `Votazioni` (
+  `idvotazione` tinyint(10) NOT NULL auto_increment,
+  `id_film` tinyint(4) NOT NULL,
+  `id_utente` tinyint(4) NOT NULL,
+  `voto` tinyint(2) NOT NULL,
+  PRIMARY KEY  (`idvotazione`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+
