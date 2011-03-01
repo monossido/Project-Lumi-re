@@ -17,17 +17,40 @@
  *      
  */
 require("configure.php");
+require("library.php");
 $film=$_GET['titoli'];
 $risoluzione=$_GET['ris'];
 $lingua=$_GET['lin'];
 $durata=$_GET['dur'];
-	$conn=mysql_connect(dbhost, dbuser, dbpwd)
-	    or die("Connessione al server MySQL fallita!");
-	  mysql_select_db(dbname);
+$user=$_POST['username'];
+$passw=$_POST['password'];
+$test=$_POST['test'];
 
-	$query="INSERT INTO Film (titolo, risoluzione, lingua, durata) VALUES ('$film','$risoluzione', '$lingua', '$durata') ";
-	$result=mysql_query($query, $conn)
-	  or die("Query fallita!" . mysql_error());
+
+if(!$test)
+{
+	if(SHA1($passw) == get_pwd($user))
+	{
+		$query="SELECT amministratore FROM Utenti WHERE Username='$user'";
+		$result=mysql_query($query, $conn)
+		  or die("Query fallita!" . mysql_error());
+		$admin=mysql_fetch_array($result);
+
+		if ($admin['amministratore']==1)
+		{
+			$conn=mysql_connect(dbhost, dbuser, dbpwd)
+			    or die("Connessione al server MySQL fallita!");
+			  mysql_select_db(dbname);
+
+			$query="INSERT INTO Film (titolo, risoluzione, lingua, durata) VALUES ('$film','$risoluzione', '$lingua', '$durata') ";
+			$result=mysql_query($query, $conn)
+			  or die("Query fallita!" . mysql_error());
+		}
+	}
+}else if(SHA1($passw) != get_pwd($user))
+{
+	echo "Nome utente o password errati";
+}
 
 
 ?>
