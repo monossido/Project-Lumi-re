@@ -60,17 +60,60 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				$query1="UPDATE Stato SET VotazioniAperte=0";
 				mysql_query($query1, $conn)
 				  or die("Query fallita!" . mysql_error());
+				echo $filmNum;
+			}else
+			{
+				$query="SELECT COUNT(*) as Num FROM Film WHERE voti>=1";
+				$result=mysql_query($query, $conn)
+					or die("Query fallita!" . mysql_error());
+				$count=mysql_fetch_array($result);
+				if($filmNum==$count['Num'])
+				{
+					$query="SELECT * FROM Film WHERE voti>=1 ORDER BY voti DESC";
+					$result=mysql_query($query, $conn)
+						or die("Query fallita!" . mysql_error());
+					while($row=mysql_fetch_array($result))
+					{
+						$voti[]=$row['voti'];
+						$film[]=$row['id_film'];
+					}
+					$film1=set_film($voti,$filmNum);
+					$voti[$film1]=0;
+					$film2=set_film($voti,$filmNum);
+					while($film2==$film1)
+						$film2=set_film($voti,$filmNum);
+					$voti[$film2]=0;
+					$queryPassato="Update Film SET passato=1 WHERE id_film=".$film[$film1]." OR id_film=".$film[$film2]."";
+					mysql_query($queryPassato, $conn)
+						  or die("Query fallita!" . mysql_error());
+				}else
+				{
+					$querySelect="SELECT id_film FROM (Select * FROM Film) AS temp WHERE voti>=1 ORDER BY voti DESC LIMIT $filmNum";
+
+					$result=mysql_query($querySelect, $conn)
+						or die("Query fallita!" . mysql_error());
+					while($row=mysql_fetch_array($result))
+						$passati[]=$row[0];
+					for($i=0;$i<count($passati);$i++)
+					{
+						$queryPassato="Update Film SET passato=1 WHERE id_film=".$passati[$i]."";		
+						mysql_query($queryPassato, $conn)
+						  or die("Query fallita!" . mysql_error());
+					}
+				}
 			}
 
-			$queryPassato="Update Film SET passato=1 WHERE id_film=(SELECT id_film FROM (Select * FROM Film) AS temp WHERE voti>=1 ORDER BY voti DESC LIMIT ".$filmNum.")";
-			mysql_query($queryPassato, $conn)
+
+			# Imposto il voto di TUTTI gli film a 0
+			$query1="UPDATE Film SET voti=0";
+			mysql_query($query1, $conn)
 			  or die("Query fallita!" . mysql_error());
 
 			# Riempio Tabella
 			$query2="SELECT * FROM Film WHERE passato=1";
 			$result2=mysql_query($query2, $conn)
 			  or die("Query fallita!" . mysql_error());
-			
+			echo "Ecco i film che passano il turno! Enjoy";
 			echo "<TABLE width=\"100%\" align=center border cellpadding=\"5\"><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Vota</th>";
 			while($film=mysql_fetch_array($result2))
 			{
@@ -85,38 +128,82 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				echo "</tr>";
 			}
 			echo "</table>";
-			echo "<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' /></form>";
+		}
+		else if($_POST['blocca2'])
+		{
+			# Imposto il round a 1 nella tabella Stato
+			$query="UPDATE Stato SET Round=2";
+			mysql_query($query, $conn)
+			  or die("Query fallita!" . mysql_error());
+			
+			# Imposto il voto di TUTTI gli utenti a 1
+			$query1="UPDATE Utenti SET voto=2";
+			mysql_query($query1, $conn)
+			  or die("Query fallita!" . mysql_error());
+
+			# Imposto le votazioni chiuse
+			$query1="UPDATE Stato SET VotazioniAperte=0";
+			mysql_query($query1, $conn)
+			  or die("Query fallita!" . mysql_error());
+
+			$queryPassato="Update Film SET passato=2 WHERE id_film=(SELECT id_film FROM (Select * FROM Film) AS temp WHERE voti>=1 ORDER BY voti DESC LIMIT 1)";
+			mysql_query($queryPassato, $conn)
+			  or die("Query fallita!" . mysql_error());
+
+
+			# Riempio Tabella
+			$query2="SELECT * FROM Film WHERE passato=2";
+			$result2=mysql_query($query2, $conn)
+			  or die("Query fallita!" . mysql_error());
+			
+			echo "Ecco il film vincitore! Enjoy";
+			echo "<TABLE width=\"100%\" align=center border cellpadding=\"5\"><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Vota</th>";
+			while($film=mysql_fetch_array($result2))
+			{
+				echo "<tr><td><a href=film.php?titolo=".$film['titolo'].">".$film['titolo']."</a></td><td>".$film['risoluzione']."</td><td>".$film['lingua']."</td><td>".$film['durata']."</td></tr>";
+
+			}
+			echo "</table>";
 		}
 		else if($_POST['azzera'])
 		{
 			$query2="UPDATE Utenti SET Voto=0";
 				mysql_query($query2, $conn);
-			$query3="UPDATE Film SET voti=0, passato=0";
+			$query3="UPDATE Film SET visto=1 WHERE passato=1";
 				mysql_query($query3, $conn);
+			$query4="UPDATE Film SET voti=0, passato=0";
+				mysql_query($query4, $conn);
+			$query5="UPDATE Stato SET Round=0,VotazioniAperte=1";
+				mysql_query($query5, $conn);
 			echo "Ho Azzerato Tutto";
 		}
-		else
-		{
+
 			$query="SELECT * FROM Stato";
 			$result=mysql_query($query, $conn)
 			  or die("Query fallita!" . mysql_error());
 			$stato=mysql_fetch_array($result);
-			echo "<p align='center'><b>Round attuale: ".$stato['Round']." round</b>";
+			$round=$stato['Round']+1;//il round 0 è il primo round, il round 1 è il secondo ecc..
+			echo "<p align='center'><b>Round attuale: $round round</b>";
 			
-			if($stato['Round']==1)
-			{
-				echo "<br />Blocca voti primo round:";
-				echo "<form align='center' method=POST action=admin.php><input type=submit disabled name=blocca1 value='Blocca' /></form>";
-				echo "<p align='center'>Blocca voti secondo round:";
-				echo "<form align='center' method=POST action=admin.php><input type=submit name=blocca2 value='Blocca' /></form>";
-			}else
+			if($stato['Round']==0)
 			{
 				echo "<br />Blocca voti primo round:";
 				echo "<form align='center' method=POST action=admin.php><input type=submit name=blocca1 value='Blocca' /></form>";
 				echo "<p align='center'>Blocca voti secondo round:";
 				echo "<form align='center' method=POST action=admin.php><input type=submit disabled name=blocca2 value='Blocca' /></form>";
+				echo "<p align='center'>Azzera i voti:<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' disabled /></form></p>";
+			}else if($stato['Round']==1 && $stato['VotazioniAperte'] )
+			{
+				echo "<br />Blocca voti primo round:";
+				echo "<form align='center' method=POST action=admin.php><input type=submit disabled name=blocca1 value='Blocca' /></form>";
+				echo "<p align='center'>Blocca voti secondo round:";
+				echo "<form align='center' method=POST action=admin.php><input type=submit name=blocca2 value='Blocca' /></form>";
+				echo "<p align='center'>Azzera i voti:<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' disabled /></form></p>";
 			}
-		}
+			else if(!$stato['VotazioniAperte'])
+			{
+				echo "<br />Le votazioni sono chiuse, una volta visto il film Azzera i voti<br />Azzera voti:<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' /></form>";
+			}
 	}
 	else	# Se NON è amministratore
 		echo "Non sei un Amministratore!";		
