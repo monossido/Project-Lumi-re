@@ -88,7 +88,7 @@ if($stato['VotazioniAperte'])
 	{
 		echo "Il secondo round &egrave gi&agrave finito, il film è stato scelto vai ai risultati per scoprire quale film si guarder&agrave";
 	}
-	echo "<p align='center'> Visualizza i <a href='risultati.php'>risultati</a> <b>parziali <</b></p>";
+	echo "<p align='center'>>Visualizza i <a href='risultati.php'>risultati</a> <b>parziali <</b></p>";
 }else
 {
 	echo "<p align='center'>Votazioni terminate! Visualizza i <a href='risultati.php'>risultati</a> <b></b></p>";
@@ -161,7 +161,7 @@ while($row=mysql_fetch_array($result))
 		echo "<td>Si</td>";
 	//Per votare dalla home bisogna, essere loggati, non aver già votato, essere ancora nel primo round
 	if(isset($_SESSION['logged']) && !$utente['Voto'] && !$stato['Round'])
-		echo "<td><a href='vota.php?id=".$row['id_film']."'>Vota</a></td>";
+		echo "<td><a href='vota.php?id=".$row['id_film']."&round=0'>Vota</a></td>";
 	else echo "<td width='8%'><em>Non puoi votare</em></td>";
 	echo "</tr>";
 }

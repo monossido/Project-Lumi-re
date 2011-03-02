@@ -21,6 +21,8 @@ require("library.php");
 session_start();
 page_start("Movie Manager - Vota");
 
+$round=$_GET['round'];
+
 if(isset($_SESSION['logged']))
 {
 	$id=$_GET['id'];
@@ -36,7 +38,7 @@ if(isset($_SESSION['logged']))
 	echo $row['titolo'];
 
 	echo "<br />Confermi il voto?<br />
-	<form method=POST action=conferma.php?id=$id>
+	<form method=POST action=conferma.php?id=$id&round=$round>
 	<input type=submit name=conferma value=conferma></form>";
 }
 
