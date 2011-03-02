@@ -22,6 +22,7 @@ session_start();
 page_start("Project Lumi&eacute;re - Vota - Conferma");
 
 $id=$_GET['id'];
+$round=$_GET['round'];
 
   $conn=mysql_connect(dbhost, dbuser, dbpwd)
     or die("Connessione al server MySQL fallita!");
@@ -33,7 +34,7 @@ $result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
 $voto=mysql_fetch_array($result);
 
-if((isset($_SESSION['logged'])) && ($voto['Voto']=="0") && ($id))
+if((isset($_SESSION['logged'])) && ($voto['Voto']==$round) && ($id))
 { 
 	$query="UPDATE Film SET voti=voti+1 WHERE id_film='$id'";
 	$result=mysql_query($query, $conn)
