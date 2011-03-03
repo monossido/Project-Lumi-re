@@ -21,23 +21,26 @@ require("library.php");
 session_start();
 page_start("Project Lumi&eacute;re - Film");
 
-echo "<p align='center'><H2>$_GET[titolo]</H2></p>";
-
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die("Connessione al server MySQL fallita!");
 mysql_select_db(dbname);
+
+$query="SELECT * FROM Film WHERE id_film=".$_GET['id']."";
+$result=mysql_query($query, $conn)
+  or die("Query fallita!" . mysql_error());
+$film=mysql_fetch_array($result);
+$id_film=$film['id_film'];
+$visto=$film['visto'];
+$titolo=$film['titolo'];
+# echo $titolo;
+
+echo "<p><H2><center>$titolo</H2></p></center>";
 
 if(isset($_SESSION['logged'])) # Se l'utente è loggato
 {
 	if (!$_POST['voto']&&!$_POST['sicuro']) // Se entra nella pagina per la prima volta:
 	{
 		# echo "<center>";
-		$query="SELECT * FROM Film WHERE titolo='$_GET[id]'";
-		$result=mysql_query($query, $conn)
-		  or die("Query fallita!" . mysql_error());
-		$film=mysql_fetch_array($result);
-		$id_film=$film['id_film'];
-		$visto=$film['visto'];
 		
 		$query3="SELECT * FROM Utenti WHERE username='$_SESSION[logged]'";
 		$result3=mysql_query($query3, $conn)
@@ -64,15 +67,18 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			$utenti=mysql_fetch_array($result6);
 			// echo "utenti="; echo $utenti['utenti'];
 			$n_utenti=$utenti['utenti'];	// Numero di utenti che ha votato il film
-			$media=$somma_tot/$n_utenti;
-			echo "<center>Voto medio del film: $media,";
-			if ($n_utenti==1) echo " ha votato un solo utente.";
-			else	echo " hanno votato in $n_utenti.";
-			echo "<br>";
-			for ($i=0;$i<$media;$i++)
-				echo"* ";
-			echo "</center>";
-			
+			if ($n_utenti==0)	echo "Non ha ancora votato nessuno questo film.<br><br>";
+			else 
+			{
+				$media=$somma_tot/$n_utenti;
+				echo "<center>Voto medio del film: $media,";
+				if ($n_utenti==1) echo " ha votato un solo utente.";
+				else	echo " hanno votato in $n_utenti.";
+				echo "<br>";
+				for ($i=0;$i<$media;$i++)
+					echo"* ";
+				echo "</center>";
+			}
 			// FINE MEDIA
 			// CONTROLLA SE L'UTENTE HA GIA' VOTATO IL FILM
 			$query4="SELECT * FROM Votazioni WHERE id_film='$id_film' AND id_utente='$id_utente'";
@@ -88,7 +94,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			else 
 			{
 				echo "Ti &egrave; piaciuto il film? Dagli un voto!";
-				echo "<form method=POST action=film.php?idfilm=$id_film>";
+				echo "<form method=POST action=film.php?id=$id_film>";
 				echo "<select name='voto' onchange='this.form.submit()'";
 				echo "<OPTION value=' - Dai un Voto! - '>VOTA!</OPTION>";
 				for ($i=0; $i<=10; $i++) 
@@ -104,17 +110,15 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 	}
 	if ($_POST['voto']) // Se ha selezionato un voto:
 	{	
-		echo "POST[voto]="; echo $_POST['voto'];
-		$id_film=$_GET['idfilm'];
-		echo "id film="; echo $id_film;
-		$query="SELECT * FROM Film WHERE id_film='$id_film'";
+		// echo "ok";
+		// echo "POST[voto]="; echo $_POST['voto'];
+		// $id_film=$_GET['id'];
+		// echo "id film="; echo $id_film;
+		$query="SELECT * FROM Film WHERE id_film=$id_film";
 		$result=mysql_query($query, $conn)
-		  or die("Query fallita!" . mysql_error());
+		  or die("Query fallita! " . mysql_error());
 		$film=mysql_fetch_array($result);
 		# echo $film['titolo'];
-	
-		echo "<HTML><HEAD><TITLE>$film[titolo]</TITLE></HEAD><BODY><HR /><br />
-		<center><H2>$film[titolo]</H2></center>";
 
 		$voto=$_POST['voto'];
 		
@@ -124,7 +128,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			echo "<font color=red>WOW! Stai per dare il MINIMO dei voti al film!</font> Sei proprio sicuro che lo meriti? :)";		
 		if ($voto>=2 && $voto<=9)
 			echo "Vuoi mettere $voto al film?";
-		echo "<form method=POST action=film.php?id_film=".$id_film."&voto=".$voto."><input type=submit name=sicuro value='SI!'></input></form>";	
+		echo "<form method=POST action=film.php?id=".$id_film."&voto=".$voto."><input type=submit name=sicuro value='SI!'></input></form>";	
 	}
 	if ($_POST['sicuro'])
 	{	
@@ -136,18 +140,16 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		$utente=mysql_fetch_array($result2);
 		$id_utente=$utente['id_utente'];
 		$voto=$_GET['voto'];
-		$id_film=$_GET['id_film'];
+		$id_film=$_GET['id'];
 		/* echo "id_utente="; echo $id_utente;
 		echo "voto="; echo $voto;
 		echo "id_film="; echo $id_film; */
 		$query="INSERT INTO Votazioni (id_utente,id_film,voto) VALUES ('$id_utente', '$id_film','$voto')";
 		mysql_query($query, $conn)
-		  or die("Query fallita!" . mysql_error());
+		  or die("Query fallita! " . mysql_error());
 		echo "Complimenti! Hai votato il film!";
 	}
 }
 	
 else
 	echo "Devi prima fare il <a href=login.php>Login</a>";
-
-
