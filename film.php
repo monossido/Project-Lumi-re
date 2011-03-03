@@ -32,7 +32,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 	if (!$_POST['voto']&&!$_POST['sicuro']) // Se entra nella pagina per la prima volta:
 	{
 		# echo "<center>";
-		$query="SELECT * FROM Film WHERE titolo='$_GET[titolo]'";
+		$query="SELECT * FROM Film WHERE titolo='$_GET[id]'";
 		$result=mysql_query($query, $conn)
 		  or die("Query fallita!" . mysql_error());
 		$film=mysql_fetch_array($result);
