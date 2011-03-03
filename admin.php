@@ -54,13 +54,22 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			$query1="UPDATE Utenti SET voto=1";
 			mysql_query($query1, $conn)
 			  or die("Query fallita!" . mysql_error());
-			if($filmNum==1)
+			if($filmNum==-1)
 			{
 				# Imposto le votazioni chiuse
 				$query1="UPDATE Stato SET VotazioniAperte=0";
 				mysql_query($query1, $conn)
 				  or die("Query fallita!" . mysql_error());
-				echo $filmNum;
+				$query="SELECT id_film FROM Film WHERE voti>=1 ORDER BY voti DESC";
+				$result=mysql_query($query, $conn)
+					or die("Query fallita!" . mysql_error());
+				while($row=mysql_fetch_array($result))
+				{
+					$film[]=$row[0];
+				}
+				$queryPassato="Update Film SET passato=1 WHERE id_film=".$film[0];
+					mysql_query($queryPassato, $conn)
+						  or die("Query fallita!" . mysql_error());
 			}else
 			{
 				$query="SELECT COUNT(*) as Num FROM Film WHERE voti>=1";
@@ -86,6 +95,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 					$queryPassato="Update Film SET passato=1 WHERE id_film=".$film[$film1]." OR id_film=".$film[$film2]."";
 					mysql_query($queryPassato, $conn)
 						  or die("Query fallita!" . mysql_error());
+
 				}else
 				{
 					$querySelect="SELECT id_film FROM (Select * FROM Film) AS temp WHERE voti>=1 ORDER BY voti DESC LIMIT $filmNum";
@@ -104,10 +114,10 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			}
 
 
-			# Imposto il voto di TUTTI gli film a 0
+			/*# Imposto il voto di TUTTI gli film a 0
 			$query1="UPDATE Film SET voti=0";
 			mysql_query($query1, $conn)
-			  or die("Query fallita!" . mysql_error());
+			  or die("Query fallita!" . mysql_error());*/
 
 			# Riempio Tabella
 			$query2="SELECT * FROM Film WHERE passato=1";

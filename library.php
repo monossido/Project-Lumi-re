@@ -64,21 +64,21 @@ function get_film() {
 		or die("Connessione al server MySQL fallita!");
 	mysql_select_db(dbname);
 
-	$query="SELECT * FROM Film WHERE voti>=1 ORDER BY voti DESC";
+	$query="SELECT voti FROM Film WHERE voti>=1 ORDER BY voti DESC";
 	$result=mysql_query($query, $conn)
 		or die("Query fallita!" . mysql_error());
 
 	$i=2;
 	$voti=0;
 	while($row=mysql_fetch_array($result))
-		$film[]=$row['voti'];
-	for(;$film[$i]==$film[$i-1];$i++)
-	for($z=0;$z<=$i;$z++)
+		$film[]=$row[0];
+	for(;$film[$i]==$film[$i-1];$i++){}
+	for($z=0;$z<count($film);$z++)
 	{
-		$voti=$voti+$film[$z]['voti'];
+		$voti=$voti+$film[$z];
 	}
-	if($film[0]['voti']>$voti/2)
-		return 1;
+	if($film[0]>$voti/2)
+		return -1;
 	else		
 		return $i;
 
@@ -94,7 +94,7 @@ function set_film($film,$i) {
 	}
 	else
 	{
-		$n=rand(0,$i);
+		$n=rand(0,$i-1);
 		return $n;
 	}
 }
