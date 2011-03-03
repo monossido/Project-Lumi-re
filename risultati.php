@@ -70,7 +70,7 @@ if($stato['Round']==1)
 			  or die("Query fallita!" . mysql_error());
 			$voto=mysql_fetch_array($result5);
 			if(isset($_SESSION['logged']) && $voto['Voto']=="1")
-				echo "<td><a href='vota.php?id=".$row['id_film']."'>Vota</a></td>";
+				echo "<td><a href='vota.php?id=".$film['id_film']."&round=".$stato['Round']."'>Vota</a></td>";
 			else echo "<td width='8%'><em>Non puoi votare</em></td>";
 			echo "</tr>";
 		}

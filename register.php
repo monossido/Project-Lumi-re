@@ -30,7 +30,7 @@ $result=mysql_query($query, $conn)
 $stato=mysql_fetch_array($result);
 
 echo "<p align='center'>";
-if(!$_SESSION['logged'])
+if($_SESSION['logged'])
 {
 	echo "Sei già loggato, effettua il <a href='logout.php'>logout</a> prima.";
 }
