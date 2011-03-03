@@ -20,12 +20,7 @@ require("configure.php");
 require("library.php");
 session_start();
 
-echo "<HTML>
-<HEAD><TITLE>ADMIN</TITLE></HEAD>
-<BODY>
-<HR />
-<H2>ADMIN PAGE</H2>";
-echo "<p align=right><a href=index.php>HOME</a></p>";
+page_start("Project Lumi&eacute;re - Inserisci Film");
 
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die("Connessione al server MySQL fallita!");
@@ -33,7 +28,6 @@ mysql_select_db(dbname);
 
 if(isset($_SESSION['logged'])) # Se l'utente è loggato
 {
-	echo "<center>";
 	$query="SELECT amministratore FROM Utenti WHERE Username='".$_SESSION['logged']."'";
 	$result=mysql_query($query, $conn)
 	  or die("Query fallita!" . mysql_error());
@@ -41,14 +35,28 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 
 	if ($admin['amministratore']==1) # Se l'utente è anche amministratore
 	{
-		echo "<center>";
-		echo "<table border=0>";
-		echo "<form method=POST action=inserisci-film2.php>";
-		echo "<tr><td>Titolo</td><td><input type=text name=titolo></tr></td>
-			<tr><td>Visto</td><td><input type=text name=visto></tr></td>
-			<tr><td>Durata</td><td><input type=text name=durata></tr></td>
-			<tr><td><input type=submit name=submit value=Inserisci></form></tr></td>";
-		echo "</center>";
+		if($_POST['submit'])
+		{
+			$titolo=$_POST['titolo'];
+			$durata=$_POST['durata'];
+			if ($_POST['visto']=="si") $visto=1;
+			else	$visto=0;
+			$query10="INSERT INTO Film (titolo, visto, risoluzione, durata, lingua) VALUES('$titolo','$visto','bluray','$durata', 'tutte')";
+			mysql_query($query10, $conn)
+			  or die("Query fallita! " . mysql_error());
+			# Fine qui
+			echo "<p align=center>Inserimento Compiuto! Torna alla <a href=index.php>HOME</a></p>";
+		}else
+		{
+			echo "<p align=center>";
+			echo "<table border=0>";
+			echo "<form method=POST action=inserisci-film.php>";
+			echo "<tr><td>Titolo</td><td><input type=text name=titolo></tr></td>
+				<tr><td>Visto</td><td><input type=text name=visto></tr></td>
+				<tr><td>Durata</td><td><input type=text name=durata></tr></td>
+				<tr><td><input type=submit name=submit value=Inserisci></form></tr></td>";
+			echo "</p>";
+		}
 	}
 	else	echo "Non sei un amministratore!";
 }
