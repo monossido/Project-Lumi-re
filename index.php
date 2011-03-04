@@ -142,7 +142,7 @@ echo "<TABLE width=\"100%\" border cellpadding=\"5\"><th>Titolo</th><th>Risoluzi
 
 while($row=mysql_fetch_array($result))
 {
-	echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$row['titolo'].">".$row['titolo']."</a></td><td>".$row['risoluzione']."</td><td>".$row['lingua']."</td><td>".$row['durata']."</td>";
+	echo "<form action=film.php method=get><tr><td><a href=film.php?id=".$row['id_film'].">".$row['titolo']."</a></td><td>".$row['risoluzione']."</td><td>".$row['lingua']."</td><td>".$row['durata']."</td>";
 	#echo "$row['visto']";
 	if ($row['visto']=="0")
 		#<td>".$row['visto']."</td>";
