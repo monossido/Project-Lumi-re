@@ -98,32 +98,19 @@ if($stato['VotazioniAperte'])
 $visti=$_GET['visti'];
 $risoluzione=$_GET['risoluzione'];
 echo "<p align='left'>Visualizza i film:";
-if($risoluzione==1)
-{
-	echo "<select name='visto' onchange=\"window.location.href='index.php?visti='+this.value+'&risoluzione=1'\">";
-}else if ($risoluzione==2)
-{
-	echo "<select name='visto' onchange=\"window.location.href='index.php?visti='+this.value+'&risoluzione=2'\">";
-}else
-{
-	echo "<select name='visto' onchange=\"window.location.href='index.php?visti='+this.value+'&risoluzione=0'\">";
-}
-echo "<option value = '0' >Non Visti</option>
-<option value = '1'";
-if($visti) echo "selected=true";
+echo "<select name='visto' onchange=\"window.location.href='index.php?visti='+this.value+'&risoluzione=$risoluzione'\">";
+
+echo "<option value='0' >Non Visti</option>
+<option value='1'";
+if($visti==1) echo "selected=true";
+echo ">Visti</option>
+<option value='2'";
+if($visti==2) echo "selected=true";
 echo ">Tutti</option>
 </select>";
 
 
-# Prova
-
-if($visti)
-{
-	echo "<select name='risoluzione' onchange=\"window.location.href='index.php?visti=1&risoluzione='+this.value\">";
-}else
-{
-	echo "<select name='risoluzione' onchange=\"window.location.href='index.php?visti=0&risoluzione='+this.value\">";
-}
+echo "<select name='risoluzione' onchange=\"window.location.href='index.php?visti=$visti&risoluzione='+this.value\">";
 echo "<option value = '0'>Tutte</option>
 <option value = '1'";
 if($risoluzione==1) echo " selected=true ";
@@ -132,13 +119,16 @@ echo ">1080p</option>
 if($risoluzione==2) echo " selected=true ";
 echo ">720p</option>
 </select></p>"; # echo $risoluzione;
-if($risoluzione=='1' && $visti=='1')	$query="SELECT * FROM Film WHERE Film.risoluzione=1080";
-if($risoluzione=='2' && $visti=='1')	$query="SELECT * FROM Film WHERE Film.risoluzione=720";
+if($risoluzione=='1' && $visti=='2')	$query="SELECT * FROM Film WHERE Film.risoluzione=1080";
+if($risoluzione=='2' && $visti=='2')	$query="SELECT * FROM Film WHERE Film.risoluzione=720";
+if($risoluzione=='1' && $visti=='1')	$query="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=1";
+if($risoluzione=='2' && $visti=='1')	$query="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=1";
 if($risoluzione=='1' && $visti=='0')	$query="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=0";
 if($risoluzione=='2' && $visti=='0')	$query="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=0";
 if($risoluzione=='1' && $visti==null)	$query="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=0";
 if($risoluzione=='2' && $visti==null)	$query="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=0";
-if($visti=='1' && $risoluzione==0)	$query="SELECT * FROM Film";
+if($visti=='2' && $risoluzione==0)	$query="SELECT * FROM Film";
+if($visti=='1' && $risoluzione==0)	$query="SELECT * FROM Film WHERE Film.visto=1";
 if($visti=='0' && $risoluzione==0)	$query="SELECT * FROM Film WHERE Film.visto=0";
 if($risoluzione=='0' && $visti==0 || $risoluzione==null && $visti==null)	$query="SELECT * FROM Film WHERE Film.visto=0";
 
