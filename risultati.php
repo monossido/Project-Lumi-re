@@ -26,55 +26,65 @@ $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die("Connessione al server MySQL fallita!");
 mysql_select_db(dbname);
 
-
-# Grafico
-
-    $chart = new HorizontalBarChart(1100, 300);
-    $dataSet = new XYDataSet();
-
-    $query="SELECT titolo,voti FROM Film WHERE voti>0";
-    $result=mysql_query($query, $conn)
- 	 or die("Query fallita!" . mysql_error());
-
-    while($row=mysql_fetch_array($result))
-    {
-    	$dataSet->addPoint(new Point($row['titolo'], $row['voti']));
-    }
-
-    $chart->setDataSet($dataSet);
-    $chart->getPlot()->setGraphPadding(new Padding(10, 10, 10, 200));
-    $chart->setTitle("Risultati parziali film");
-    $chart->render("grafici/grafico1.png");
-
-    echo '<p  align=center><img src="grafici/grafico1.png" alt="grafico" /></p>';
-
 $query="SELECT * FROM Stato";
 $result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
 $stato=mysql_fetch_array($result);
 
-if($stato['Round']==1)
+if($stato['VotazioniAperte'] && $stato['Round'])
 {
-	# Stampa tabella film votati
-		# Riempio Tabella
-		$query4="SELECT * FROM Film WHERE passato=1";
-		$result4=mysql_query($query4, $conn)
-		  or die("Query fallita!" . mysql_error());
 
-		echo "<br /><p align=center><b>Film passati al secondo turno:</b></p><TABLE width=\"55%\" border=1 align=center cellpadding=5><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Vota</th>";
-		while($film=mysql_fetch_array($result4))
-		{
-			echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['titolo'].">".$film['titolo']."</a></td><td>".$film['risoluzione']."</td><td>".$film['lingua']."</td><td>".$film['durata']."</td>";
-			$query5="SELECT Voto FROM Utenti WHERE Username='".$_SESSION['logged']."'";
-			$result5=mysql_query($query5, $conn)
+	# Grafico
+
+	    $chart = new HorizontalBarChart(1100, 300);
+	    $dataSet = new XYDataSet();
+
+	    $query="SELECT titolo,voti FROM Film WHERE voti>0";
+	    $result=mysql_query($query, $conn)
+	 	 or die("Query fallita!" . mysql_error());
+
+	    while($row=mysql_fetch_array($result))
+	    {
+	    	$dataSet->addPoint(new Point($row['titolo'], $row['voti']));
+	    }
+
+	    $chart->setDataSet($dataSet);
+	    $chart->getPlot()->setGraphPadding(new Padding(10, 10, 10, 200));
+	    $chart->setTitle("Risultati parziali film");
+	    $chart->render("grafici/grafico1.png");
+
+	    echo '<p  align=center><img src="grafici/grafico1.png" alt="grafico" /></p>';
+
+	if($stato['Round']==1 && $stato['VotazioniAperte']==1)
+		echo "<br /><p align=center><b>Film passati al secondo turno:</b></p>";
+	else if($stato['VotazioniAperte']==0)
+		echo "<br /><p align=center><b>Ecco il film vincitore:</b></p>";
+	if($stato['Round']==1 || $stato['VotazioniAperte']==0)
+	{
+		# Stampa tabella film votati
+			# Riempio Tabella
+			$query="SELECT * FROM Film WHERE passato=1";
+			$result=mysql_query($query, $conn)
 			  or die("Query fallita!" . mysql_error());
-			$voto=mysql_fetch_array($result5);
-			if(isset($_SESSION['logged']) && $voto['Voto']=="1")
-				echo "<td><a href='vota.php?id=".$film['id_film']."&round=".$stato['Round']."'>Vota</a></td>";
-			else echo "<td width='8%'><em>Non puoi votare</em></td>";
-			echo "</tr>";
-		}
-		echo "</table>";
+
+			echo "<TABLE width=\"55%\" border=1 align=center cellpadding=5><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Vota</th>";
+			while($film=mysql_fetch_array($result4))
+			{
+				echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['titolo'].">".$film['titolo']."</a></td><td>".$film['risoluzione']."</td><td>".$film['lingua']."</td><td>".$film['durata']."</td>";
+				$query5="SELECT Voto FROM Utenti WHERE Username='".$_SESSION['logged']."'";
+				$result5=mysql_query($query5, $conn)
+				  or die("Query fallita!" . mysql_error());
+				$voto=mysql_fetch_array($result5);
+				if(isset($_SESSION['logged']) && $voto['Voto']=="1")
+					echo "<td><a href='vota.php?id=".$film['id_film']."&round=".$stato['Round']."'>Vota</a></td>";
+				else echo "<td width='8%'><em>Non puoi votare</em></td>";
+				echo "</tr>";
+			}
+			echo "</table>";
+	}
+}else
+{
+	echo "<p align=center><b>Nessuna notazione in corso</p></b>";
 }
 page_end();
 ?>
