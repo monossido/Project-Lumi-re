@@ -183,9 +183,20 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				mysql_query($query3, $conn);
 			$query4="UPDATE Film SET voti=0, passato=0";
 				mysql_query($query4, $conn);
-			$query5="UPDATE Stato SET Round=0,VotazioniAperte=1";
+			$query5="UPDATE Stato SET Round=0,VotazioniAperte=0";
 				mysql_query($query5, $conn);
 			echo "Ho Azzerato Tutto";
+		}else if($_POST['avvia'])
+		{
+			$query2="UPDATE Utenti SET Voto=0";
+				mysql_query($query2, $conn);
+			$query3="UPDATE Film SET visto=1 WHERE passato=1";
+				mysql_query($query3, $conn);
+			$query4="UPDATE Film SET voti=0, passato=0";
+				mysql_query($query4, $conn);
+			$query5="UPDATE Stato SET Round=0,VotazioniAperte=1";
+				mysql_query($query5, $conn);
+			echo "Ho Azzerato Tutto e avviato una nuova Votazione";
 		}
 
 			$query="SELECT * FROM Stato";
@@ -195,13 +206,14 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			$round=$stato['Round']+1;//il round 0 è il primo round, il round 1 è il secondo ecc..
 			echo "<p align='center'><b>Round attuale: $round round</b>";
 			
-			if($stato['Round']==0)
+			if($stato['Round']==0  && $stato['VotazioniAperte'])
 			{
 				echo "<br />Blocca voti primo round:";
 				echo "<form align='center' method=POST action=admin.php><input type=submit name=blocca1 value='Blocca' /></form>";
 				echo "<p align='center'>Blocca voti secondo round:";
 				echo "<form align='center' method=POST action=admin.php><input type=submit disabled name=blocca2 value='Blocca' /></form>";
 				echo "<p align='center'>Azzera i voti:<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' disabled /></form></p>";
+				echo "<p align='center'>Avvia una nuova votazione<form align='center' method=POST action=admin.php><input type=submit disabled name=avvia value='Avvia' /></form></p>";
 			}else if($stato['Round']==1 && $stato['VotazioniAperte'] )
 			{
 				echo "<br />Blocca voti primo round:";
@@ -209,10 +221,12 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				echo "<p align='center'>Blocca voti secondo round:";
 				echo "<form align='center' method=POST action=admin.php><input type=submit name=blocca2 value='Blocca' /></form>";
 				echo "<p align='center'>Azzera i voti:<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' disabled /></form></p>";
+				echo "<p align='center'>Avvia una nuova votazione<form align='center' method=POST action=admin.php><input type=submit disabled name=avvia value='Avvia' /></form></p>";
 			}
 			else if(!$stato['VotazioniAperte'])
 			{
 				echo "<br />Le votazioni sono chiuse, una volta visto il film Azzera i voti<br />Azzera voti:<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' /></form>";
+				echo "<p align='center'>Avvia una nuova votazione<form align='center' method=POST action=admin.php><input type=submit name=avvia value='Avvia' /></form></p>";
 			}
 	}
 	else	# Se NON è amministratore
