@@ -13,13 +13,8 @@
  *      GNU General Public License for more details.
  *      
  *      You should have received a copy of the GNU General Public License
-<<<<<<< HEAD:index.php
  *      along with Project Lumiére.  If not, see <http://www.gnu.org/licenses/>.
  *      
-=======
- *      along with Transdroid.  If not, see <http://www.gnu.org/licenses/>.
- *    
->>>>>>> b0f504be14cac5e19b207afb638625ab2641fde0:index.php
  */
 require("configure.php");
 require("library.php");
@@ -85,7 +80,6 @@ if(isset($_SESSION['logged']))
 {
 	echo "<p align='right'>Effettua il <a href='login.php'>login</a> o <a href='register.php'>registrati</a></div>";
 }
-echo "</table>";
 if($stato['VotazioniAperte'])
 {
 	//A che round siamo?
