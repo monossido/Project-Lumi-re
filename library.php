@@ -52,9 +52,11 @@ function get_pwd($login) {
 
   $output=mysql_fetch_assoc($result);
 
-  if ($output)
+  if ($output && $output['verificato'])
     return $output['Password'];
-  else 
+  else if (!$output['verificato'])
+    return -1;
+  else
     return FALSE;
 };
 

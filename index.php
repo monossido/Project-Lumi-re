@@ -43,10 +43,16 @@ if ($_POST['login']) {
 	  /* recupera i dati immessi */
 	  $login=$_POST['username'];
 	  $password=$_POST['password'];
-
-	if (($login) && (SHA1($password) == get_pwd($login)))
+	$passwd=get_pwd($login);
+	if (($login) && (SHA1($password) == $passwd))
 	{
 		$_SESSION['logged']=$login;
+	}else if($passwd==-1)
+	{
+		echo "Il tuo account è stato creato ma non verificato";
+	}else
+	{
+		echo "Username o password non corretti";
 	}
 }
 
