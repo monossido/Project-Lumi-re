@@ -93,9 +93,12 @@ if($stato['VotazioniAperte'])
 		echo "Il secondo round &egrave gi&agrave finito, il film è stato scelto vai ai risultati per scoprire quale film si guarder&agrave";
 	}
 	echo "<p align='center'>>Visualizza i <a href='risultati.php'>risultati</a> <b>parziali <</b></p>";
+}else if($stato['Round']!=0)
+{
+	echo "<p align='center'>Votazioni terminate! >Visualizza i <a href='risultati.php'>risultati</a>< <b></b></p>";
 }else
 {
-	echo "<p align='center'>Votazioni terminate! Visualizza i <a href='risultati.php'>risultati</a> <b></b></p>";
+	echo "<p align='center'>Nessuna votazione in corso!</p>";
 }
 
 
