@@ -20,19 +20,23 @@ require("configure.php");
 require("library.php");
 session_start();
 
-echo '<HTML>
+echo "<HTML>
 <HEAD><TITLE>Project Lumi&eacute;re 0.1</TITLE></HEAD>
 <BODY>
-<HR />
-<center><img src="images/logo0.2e.jpg" border="0"></center>';
+<link rel='stylesheet' type='text/css' href='style.css'>
+<div id='container'>
+	 <div id='header'>
+	 	 <center><img src='images/logo.jpg' border='0'></center>
+	 </div>
+	  <HR>";
 
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
-	or die("Connessione al server MySQL fallita!");
+	or die('Connessione al server MySQL fallita!');
 mysql_select_db(dbname);
 
-$query2="SELECT * FROM Stato";
+$query2='SELECT * FROM Stato';
 $result2=mysql_query($query2, $conn)
-  or die("Query fallita!" . mysql_error());
+  or die('Query fallita!' . mysql_error());
 $stato=mysql_fetch_array($result2);
 
 if ($_POST['login']) {
@@ -56,7 +60,7 @@ if(isset($_SESSION['logged']))
 	# echo $admin['amministratore'];
 	if ($utente['amministratore'])
 	{
-		echo "<div align='left'><font color=red>Vai alla pagina di <a href=admin.php>ADMIN</a></font><br />";
+		echo "<div id='navigation'><div align='left'><font color=red>Vai alla pagina di <a href=admin.php>ADMIN</a></font><br />";
 		echo "Vai alla pagina di <a href=inserisci-film.php>inserimento film</a></div>";
 	}
 
@@ -74,7 +78,7 @@ if(isset($_SESSION['logged']))
 
 }else
 {
-	echo "<p align='right'>Effettua il <a href='login.php'>login</a> o <a href='register.php'>registrati</a><HR />";
+	echo "<p align='right'>Effettua il <a href='login.php'>login</a> o <a href='register.php'>registrati</a></div>";
 }
 echo "</table>";
 if($stato['VotazioniAperte'])
@@ -82,7 +86,7 @@ if($stato['VotazioniAperte'])
 	//A che round siamo?
 	if($stato['Round']==1)
 	{
-		echo "Il primo round &egrave gi&agrave finito, vai ai risultati parziali per votare per il secondo round";
+		echo "<div id='content'>Il primo round &egrave gi&agrave finito, vai ai risultati parziali per votare per il secondo round";
 
 	}else if($stato['Round']==2)
 	{
@@ -163,5 +167,5 @@ echo "</table>";
 # echo "<p align='center'>Visualizza i <a href='risultati.php'>risultati</a> <b>parziali</b></p>";
 
 
-echo '</BODY></HEAD></HTML>';
+echo '</div></BODY></HEAD></HTML>';
 
