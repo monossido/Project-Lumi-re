@@ -19,11 +19,62 @@
 body{font-family: arial,sans-serif; font-size: 76%}
 div#container{ width: auto; }
 div#header{position: relative;height: 125px;
-background: url(logobg.gif) repeat-x top right
+background: url('images/logobg.gif') repeat-x top right;}
 h1{margin: 0;padding:0}
 h2{color:#4078B8; font-size:1.5em; text-align:center}
 div#navigation{}
 div#content{padding:0 1.5em}
 div#content p{line-height:1.3em}
 div#footer{padding:0.5em; background-color:#B0D0E8; color:#000; text-align:center}
+<<<<<<< HEAD:style.css
 </style>
+=======
+.SearchBarRight {
+ width:4px;
+ vertical-align:top;
+ background-image:url(http://static.subito.it/img/SearchBarRightBackgroundNew.gif);
+ background-position:bottom left;
+ background-repeat:no-repeat;
+ }
+
+.SearchBarBottom {
+ height:3px;
+ background-image:url(http://static.subito.it/img/SearchBarBottomBackground.gif);
+ background-repeat:repeat-x;
+}       
+
+.SearchBarLeft  {
+ width:2px;
+ vertical-align:top;
+ padding:0 0 0 0;
+ background-image:url(http://static.subito.it/img/SearchBarLeftBackground.gif);
+ background-position:bottom left;
+ background-repeat:no-repeat;
+ }
+
+.SearchBarCenter        {
+ padding:0 0 0 0;
+ background-image:url(http://static.subito.it/img/SearchBarCenterBackgroundNew.gif);
+ background-repeat:repeat-x;
+ }               
+
+#searchmain {
+ margin-bottom: 0px;
+ position:relative;
+}
+
+#searchmain #cat{
+width: 230px;
+}
+
+#searchextras {
+ clear: left;
+}
+
+#searchtext {
+ width: 250px;
+ margin: 6px 4px 0 5px;	
+ float: left;
+}
+</style>
+>>>>>>> b0f504be14cac5e19b207afb638625ab2641fde0:style.css
