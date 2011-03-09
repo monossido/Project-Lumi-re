@@ -54,7 +54,7 @@ function get_pwd($login) {
 
   if ($output && $output['verificato'])
     return $output['Password'];
-  else if (!$output['verificato'])
+  else if ($output && !$output['verificato'])
     return -1;
   else
     return FALSE;
