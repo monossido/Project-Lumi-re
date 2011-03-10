@@ -13,7 +13,7 @@
 #      GNU General Public License for more details.
 #      
 #      You should have received a copy of the GNU General Public License
-#      along with Transdroid.  If not, see <http://www.gnu.org/licenses/>.
+#      along with Project Lumiére.  If not, see <http://www.gnu.org/licenses/>.
 #      
 #
 	if [ -z $1 ] || [ -z $2 ]
@@ -61,7 +61,7 @@
 			fi
 		fi
 		temp3=`mkvinfo $i | grep "Duration" | sed -e 's/^.*(//g' | sed -e 's/\..*$//g'`
-		$film=`echo $i | sed -e 's/^.*]//g' | sed -e 's/ //g' | sed -e 's/.mkv//g'`
+		film=`echo $i | sed -e 's/^.*]//g' | sed -e 's/ //g' | sed -e 's/.mkv//g'`
 		nome=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$film")
 		wget --post-data "username=$1&password=$2" -O /dev/null -q "http://monossido.ath.cx/cinema/inserisci.php?titoli=$nome&ris=$ris&lin=$lingua&dur=$temp3"
 		(( ++a ))

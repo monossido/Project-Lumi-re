@@ -13,7 +13,7 @@
  *      GNU General Public License for more details.
  *      
  *      You should have received a copy of the GNU General Public License
- *      along with Transdroid.  If not, see <http://www.gnu.org/licenses/>.
+ *      along with Project Lumiére.  If not, see <http://www.gnu.org/licenses/>.
  *      
  */
 require("configure.php");
@@ -39,6 +39,22 @@ $result2=mysql_query($query2, $conn)
   or die('Query fallita!' . mysql_error());
 $stato=mysql_fetch_array($result2);
 
+if ($_POST['login']) {
+	  /* recupera i dati immessi */
+	  $login=$_POST['username'];
+	  $password=$_POST['password'];
+	$passwd=get_pwd($login);
+	if (($login) && (SHA1($password) == $passwd))
+	{
+		$_SESSION['logged']=$login;
+	}else if($passwd==-1)
+	{
+		echo "Il tuo account è stato creato ma non verificato";
+	}else
+	{
+		echo "Username o password non corretti";
+	}
+}
 
 if(isset($_SESSION['logged']))
 {
@@ -70,7 +86,6 @@ if(isset($_SESSION['logged']))
 {
 	echo "<p align='right'>Effettua il <a href='login.php'>login</a> o <a href='register.php'>registrati</a></div>";
 }
-echo "</table>";
 if($stato['VotazioniAperte'])
 {
 	//A che round siamo?
@@ -83,9 +98,12 @@ if($stato['VotazioniAperte'])
 		echo "Il secondo round &egrave gi&agrave finito, il film è stato scelto vai ai risultati per scoprire quale film si guarder&agrave";
 	}
 	echo "<p align='center'>>Visualizza i <a href='risultati.php'>risultati</a> <b>parziali <</b></p>";
+}else if($stato['Round']!=0)
+{
+	echo "<p align='center'>Votazioni terminate! >Visualizza i <a href='risultati.php'>risultati</a>< <b></b></p>";
 }else
 {
-	echo "<p align='center'>Votazioni terminate! Visualizza i <a href='risultati.php'>risultati</a> <b></b></p>";
+	echo "<p align='center'>Nessuna votazione in corso!</p>";
 }
 
 

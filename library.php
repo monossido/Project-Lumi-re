@@ -13,7 +13,7 @@
  *      GNU General Public License for more details.
  *      
  *      You should have received a copy of the GNU General Public License
- *      along with Transdroid.  If not, see <http://www.gnu.org/licenses/>.
+ *      along with Project Lumiére.  If not, see <http://www.gnu.org/licenses/>.
  *      
  */
 require("configure.php");
@@ -52,9 +52,11 @@ function get_pwd($login) {
 
   $output=mysql_fetch_assoc($result);
 
-  if ($output)
+  if ($output && $output['verificato'])
     return $output['Password'];
-  else 
+  else if ($output && !$output['verificato'])
+    return -1;
+  else
     return FALSE;
 };
 

@@ -13,7 +13,7 @@
  *      GNU General Public License for more details.
  *      
  *      You should have received a copy of the GNU General Public License
- *      along with Transdroid.  If not, see <http://www.gnu.org/licenses/>.
+ *      along with Project Lumiére.  If not, see <http://www.gnu.org/licenses/>.
  *      
  */
 require("configure.php");
@@ -39,7 +39,7 @@ if((isset($_SESSION['logged'])) && ($voto['Voto']==$round) && ($id))
 	$query="UPDATE Film SET voti=voti+1 WHERE id_film='$id'";
 	$result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
-	$query="UPDATE Utenti SET Voto=1 WHERE Username='".$_SESSION['logged']."'";
+	$query="UPDATE Utenti SET Voto=Voto+1 WHERE Username='".$_SESSION['logged']."'";
 	$result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
 echo "Voto confermato!";

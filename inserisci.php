@@ -13,7 +13,7 @@
  *      GNU General Public License for more details.
  *      
  *      You should have received a copy of the GNU General Public License
- *      along with Transdroid.  If not, see <http://www.gnu.org/licenses/>.
+ *      along with Project Lumiére.  If not, see <http://www.gnu.org/licenses/>.
  *      
  */
 require("configure.php");
@@ -26,36 +26,38 @@ $user=$_POST['username'];
 $passw=$_POST['password'];
 $test=$_POST['test'];
 
+$conn=mysql_connect(dbhost, dbuser, dbpwd)
+	or die("Connessione al server MySQL fallita!");
+mysql_select_db(dbname);
+
+$query="SELECT amministratore FROM Utenti WHERE Username='$user'";
+$result=mysql_query($query, $conn)
+  or die("Query fallita!" . mysql_error());
+$admin=mysql_fetch_array($result);
 
 if(!$test)
 {
 	if(SHA1($passw) == get_pwd($user))
 	{
-		$conn=mysql_connect(dbhost, dbuser, dbpwd)
-			or die("Connessione al server MySQL fallita!");
-		mysql_select_db(dbname);
-
-		$query="SELECT amministratore FROM Utenti WHERE Username='$user'";
-		$result=mysql_query($query, $conn)
-		  or die("Query fallita!" . mysql_error());
-		$admin=mysql_fetch_array($result);
-
 
 		if ($admin['amministratore']==1)
 		{
-			$conn=mysql_connect(dbhost, dbuser, dbpwd)
-			    or die("Connessione al server MySQL fallita!");
-			  mysql_select_db(dbname);
-
 			$query="INSERT INTO Film (titolo, risoluzione, lingua, durata) VALUES ('$film','$risoluzione', '$lingua', '$durata') ";
 			$result=mysql_query($query, $conn)
 			  or die("Query fallita!" . mysql_error());
+		}else{
+			echo "Non sei amministratore";
 		}
+	}else
+	{
+		echo "Nome utente o password errati";
 	}
 }else if(SHA1($passw) != get_pwd($user))
 {
 	echo "Nome utente o password errati";
+}else if($admin['amministratore']!=1)
+{
+	echo "Non sei amministratore";
 }
-
 
 ?>

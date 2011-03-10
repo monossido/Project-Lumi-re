@@ -13,7 +13,7 @@
  *      GNU General Public License for more details.
  *      
  *      You should have received a copy of the GNU General Public License
- *      along with Transdroid.  If not, see <http://www.gnu.org/licenses/>.
+ *      along with Project Lumiére.  If not, see <http://www.gnu.org/licenses/>.
  *      
  */
 require("configure.php");
@@ -114,10 +114,10 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			}
 
 
-			/*# Imposto il voto di TUTTI gli film a 0
+			# Imposto il voto di TUTTI gli film a 0
 			$query1="UPDATE Film SET voti=0";
 			mysql_query($query1, $conn)
-			  or die("Query fallita!" . mysql_error());*/
+			  or die("Query fallita!" . mysql_error());
 
 			# Riempio Tabella
 			$query2="SELECT * FROM Film WHERE passato=1";
