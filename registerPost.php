@@ -21,6 +21,16 @@ require("configure.php");
 session_start();
 page_start("Movie Manager - Registrati");
 
+$conn=mysql_connect(dbhost, dbuser, dbpwd)
+	or die('Connessione al server MySQL fallita!');
+mysql_select_db(dbname);
+
+/* $query2="SELECT mail FROM Utenti";
+$result2=mysql_query($query2, $conn)
+  or die("Query fallita!" . mysql_error());
+$stato=mysql_fetch_array($result2);
+$tot=$stato['mail'];
+echo "tot="; echo $tot; echo "<br>"; */
 
 if ($_POST['submit']) {
 	/* recupera i dati immessi */
@@ -66,7 +76,7 @@ if ($_POST['submit']) {
 		or die("Connessione al server MySQL fallita!");
 
 		mysql_select_db(dbname);
-  		$code = rand(1, 999);	// Genera un numero casuale
+  		$code = rand(1, 9999);	// Genera un numero casuale
 		echo $code;
 		$query="SELECT * FROM Stato";
 		$result=mysql_query($query, $conn)
