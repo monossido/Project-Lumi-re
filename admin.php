@@ -114,10 +114,10 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			}
 
 
-			/*# Imposto il voto di TUTTI gli film a 0
+			# Imposto il voto di TUTTI gli film a 0
 			$query1="UPDATE Film SET voti=0";
 			mysql_query($query1, $conn)
-			  or die("Query fallita!" . mysql_error());*/
+			  or die("Query fallita!" . mysql_error());
 
 			# Riempio Tabella
 			$query2="SELECT * FROM Film WHERE passato=1";
