@@ -39,16 +39,6 @@ $result2=mysql_query($query2, $conn)
   or die('Query fallita!' . mysql_error());
 $stato=mysql_fetch_array($result2);
 
-if ($_POST['login']) {
-	  /* recupera i dati immessi */
-	  $login=$_POST['username'];
-	  $password=$_POST['password'];
-
-	if (($login) && (SHA1($password) == get_pwd($login)))
-	{
-		$_SESSION['logged']=$login;
-	}
-}
 
 if(isset($_SESSION['logged']))
 {
