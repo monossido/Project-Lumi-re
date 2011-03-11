@@ -39,23 +39,6 @@ $result2=mysql_query($query2, $conn)
   or die('Query fallita!' . mysql_error());
 $stato=mysql_fetch_array($result2);
 
-if ($_POST['login']) {
-	  /* recupera i dati immessi */
-	  $login=$_POST['username'];
-	  $password=$_POST['password'];
-	$passwd=get_pwd($login);
-	if (($login) && (SHA1($password) == $passwd))
-	{
-		$_SESSION['logged']=$login;
-	}else if($passwd==-1)
-	{
-		echo "Il tuo account è stato creato ma non verificato";
-	}else
-	{
-		echo "Username o password non corretti";
-	}
-}
-
 if(isset($_SESSION['logged']))
 {
 	$query="SELECT Voto,amministratore FROM Utenti WHERE Username='".$_SESSION['logged']."'";
