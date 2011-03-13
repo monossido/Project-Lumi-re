@@ -58,6 +58,10 @@ if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risultati 
 		$chart->render("grafici/grafico1.png");
 
 		echo '<p  align=center><img src="grafici/grafico1.png" alt="grafico" /></p>';
+	}else
+	{
+		echo "<p  align=center>Per vedere i voti parziali devi aver votato per il round attualmente in corso
+</p>";
 	}
 
 	if($stato['Round']==1 && $stato['VotazioniAperte']==1)
