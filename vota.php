@@ -21,10 +21,9 @@ require("library.php");
 session_start();
 page_start("Movie Manager - Vota");
 
-$round=$_GET['round'];
-
 if(isset($_SESSION['logged']))
 {
+	$round=$_GET['round'];
 	$id=$_GET['id'];
 	$conn=mysql_connect(dbhost, dbuser, dbpwd)
 	    or die("Connessione al server MySQL fallita!");
@@ -40,6 +39,9 @@ if(isset($_SESSION['logged']))
 	echo "<br />Confermi il voto?<br />
 	<form method=POST action=conferma.php?id=$id&round=$round>
 	<input type=submit name=conferma value=conferma></form>";
+}else
+{
+	echo "<p align=center>Devi prima <a href='login.php'>loggarti</a></p>";
 }
 
 ?>
