@@ -39,7 +39,10 @@ if((isset($_SESSION['logged'])) && ($voto['Voto']==$round) && ($id))
 	$query="UPDATE Film SET voti=voti+1 WHERE id_film='$id'";
 	$result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
-	$query="UPDATE Utenti SET Voto=Voto+1 WHERE Username='".$_SESSION['logged']."'";
+	if($round==0)
+		$query="UPDATE Utenti SET Voto=Voto+1,Voto1=$id WHERE Username='".$_SESSION['logged']."'";
+	else if($round==1)
+		$query="UPDATE Utenti SET Voto=Voto+1,Voto2=$id WHERE Username='".$_SESSION['logged']."'";
 	$result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
 echo "Voto confermato!";

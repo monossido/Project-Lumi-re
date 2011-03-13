@@ -177,6 +177,10 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		}
 		else if($_POST['azzera'])
 		{
+			$query0="UPDATE Utenti SET Voto1=0";
+				mysql_query($query0, $conn);
+			$query1="UPDATE Utenti SET Voto2=0";
+				mysql_query($query1, $conn);
 			$query2="UPDATE Utenti SET Voto=0";
 				mysql_query($query2, $conn);
 			$query3="UPDATE Film SET visto=1 WHERE passato=1";
@@ -188,6 +192,10 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			echo "Ho Azzerato Tutto";
 		}else if($_POST['avvia'])
 		{
+			$query0="UPDATE Utenti SET Voto1=0";
+				mysql_query($query0, $conn);
+			$query1="UPDATE Utenti SET Voto2=0";
+				mysql_query($query1, $conn);
 			$query2="UPDATE Utenti SET Voto=0";
 				mysql_query($query2, $conn);
 			$query3="UPDATE Film SET visto=1 WHERE passato=1";
@@ -203,10 +211,10 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			$result=mysql_query($query, $conn)
 			  or die("Query fallita!" . mysql_error());
 			$stato=mysql_fetch_array($result);
-			$round=$stato['Round']+1;//il round 0 è il primo round, il round 1 è il secondo ecc..
-			echo "<p align='center'><b>Round attuale: $round round</b>";
+			$round=$stato['Round'];
+			echo "<p align='center'><b>Round attuale: ".($round+1)." round</b>";//il round 0 è il primo round, il round 1 è il secondo ecc..
 			
-			if($stato['Round']==0  && $stato['VotazioniAperte'])
+			if($round==0  && $stato['VotazioniAperte'])
 			{
 				echo "<br />Blocca voti primo round:";
 				echo "<form align='center' method=POST action=admin.php><input type=submit name=blocca1 value='Blocca' /></form>";
@@ -214,7 +222,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				echo "<form align='center' method=POST action=admin.php><input type=submit disabled name=blocca2 value='Blocca' /></form>";
 				echo "<p align='center'>Azzera i voti:<br /><form align='center' method=POST action=admin.php><input type=submit name=azzera value='Azzera voti' disabled /></form></p>";
 				echo "<p align='center'>Avvia una nuova votazione<form align='center' method=POST action=admin.php><input type=submit disabled name=avvia value='Avvia' /></form></p>";
-			}else if($stato['Round']==1 && $stato['VotazioniAperte'] )
+			}else if($round==1 && $stato['VotazioniAperte'] )
 			{
 				echo "<br />Blocca voti primo round:";
 				echo "<form align='center' method=POST action=admin.php><input type=submit disabled name=blocca1 value='Blocca' /></form>";

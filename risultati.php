@@ -37,7 +37,7 @@ if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risultati 
 	$result5=mysql_query($query5, $conn)
 	  or die("Query fallita!" . mysql_error());
 	$voto=mysql_fetch_array($result5);
-	if($voto['Voto']>=$stato['Round'])//Solo se l'utente ha già votato per quel round faccio vedere i risultati parziali
+	if($voto['Voto']>$stato['Round'])//Solo se l'utente ha già votato per quel round faccio vedere i risultati parziali
 	{
 		# Grafico
 		$chart = new HorizontalBarChart(1100, 300);
@@ -76,12 +76,46 @@ if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risultati 
 			while($film=mysql_fetch_array($result))
 			{
 				echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['titolo'].">".$film['titolo']."</a></td><td>".$film['risoluzione']."</td><td>".$film['lingua']."</td><td>".$film['durata']."</td>";
-				if(isset($_SESSION['logged']) && $voto['Voto']=="1")
+				if(isset($_SESSION['logged']) && $voto['Voto']=="1" && $stato['VotazioniAperte']==1)
 					echo "<td><a href='vota.php?id=".$film['id_film']."&round=".$stato['Round']."'>Vota</a></td>";
 				else echo "<td width='8%'><em>Non puoi votare</em></td>";
 				echo "</tr>";
 			}
 			echo "</table>";
+
+		//Film votati da...
+			if($stato['Round']==1)
+				$query="SELECT Username,Voto1 FROM Utenti WHERE Voto1!=0 ORDER BY Voto1";
+			else if($stato['Round']==2)
+				$query="SELECT Username,Voto2 FROM Utenti WHERE Voto1!=0 ORDER BY Voto2";
+			$result=mysql_query($query, $conn)
+			  or die("Query fallita!" . mysql_error());
+			while($data=mysql_fetch_array($result))
+			{
+				$usernames[]=$data[0];
+				$ids[]=$data[1];
+			}
+			
+			echo "<p align=center>Tutti i film votati:</p>";
+
+			echo "<TABLE width=\"55%\" border=1 align=center cellpadding=5><th>Titolo</th><th>Votati da</th>";
+			for($i=0;$i<count($usernames);$i++)
+			{
+					$query="SELECT * FROM Film WHERE id_film=".$ids[$i]."";
+					$result=mysql_query($query, $conn)
+				 		 or die("Query fallita!" . mysql_error());
+					$film=mysql_fetch_assoc($result);
+					echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['titolo'].">".$film['titolo']."</a></td><td>$usernames[$i]";
+				while($ids[$i]==$ids[$i+1])
+				{
+					$i++;
+					echo "<br />$usernames[$i]";
+				}
+				echo "</td></tr>";
+				
+			}
+			echo "</table>";
+
 	}
 }else
 {
