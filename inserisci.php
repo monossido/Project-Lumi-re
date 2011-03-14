@@ -25,10 +25,11 @@ $durata=$_GET['dur'];
 $user=$_POST['username'];
 $passw=$_POST['password'];
 $test=$_POST['test'];
-
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die("Connessione al server MySQL fallita!");
 mysql_select_db(dbname);
+
+mysql_query('set names utf8');
 
 $query="SELECT amministratore FROM Utenti WHERE Username='$user'";
 $result=mysql_query($query, $conn)
