@@ -36,6 +36,34 @@ $titolo=$film['titolo'];
 
 echo "<p><H2><center>$titolo</H2></p></center>";
 
+// MEDIA ARITMETICA DEI VOTI RICEVUTI DAL FILM
+$query5="SELECT sum(voto) as somma FROM Votazioni WHERE id_film='$id_film'";
+$result5=mysql_query($query5, $conn)
+  or die("Query fallita!" . mysql_error());
+$voti=mysql_fetch_array($result5);
+$somma_tot=$voti['somma'];	// Somma totale dei voti ricevuti dal film		
+// $num_voti=$voti['idvotazione'];
+// echo "voti="; echo $voti['somma'];
+$query6="SELECT count(*) as utenti FROM Votazioni WHERE id_film='$id_film'";
+$result6=mysql_query($query6, $conn)
+  or die("Query fallita!" . mysql_error());
+$utenti=mysql_fetch_array($result6);
+// echo "utenti="; echo $utenti['utenti'];
+$n_utenti=$utenti['utenti'];	// Numero di utenti che ha votato il film
+if ($n_utenti==0)	echo "Non ha ancora votato nessuno questo film.<br><br>";
+else 
+{
+	$media=$somma_tot/$n_utenti;
+	echo "<center>Voto medio del film: $media,";
+	if ($n_utenti==1) echo " ha votato un solo utente.";
+	else	echo " hanno votato in $n_utenti.";
+	echo "<br>";
+	for ($i=0;$i<$media;$i++)
+		echo"* ";
+	echo "</center>";
+}
+// FINE MEDIA
+
 if(isset($_SESSION['logged'])) # Se l'utente è loggato
 {
 	if (!$_POST['voto']&&!$_POST['sicuro']) // Se entra nella pagina per la prima volta:
@@ -47,66 +75,34 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		  or die("Query fallita!" . mysql_error());
 		$utente=mysql_fetch_array($result3);	
 		$id_utente=$utente['id_utente'];
-
-
-		if ($visto==0)	# Se il film NON è stato visto
-			echo "Il film non &egrave; stato ancora visto, quindi non si pu&ograve; ancora votare!";
-		else	# Se è stato visto
+	
+		// CONTROLLA SE L'UTENTE HA GIA' VOTATO IL FILM
+		$query4="SELECT * FROM Votazioni WHERE id_film='$id_film' AND id_utente='$id_utente'";
+		$result4=mysql_query($query4, $conn)
+		  or die("Query fallita!" . mysql_error());
+		$votazioni=mysql_fetch_array($result4);
+		$voto=$votazioni['voto'];
+		$id=$votazioni['idvotazione'];	// PRELEVA L'ID DELLA VOTAZIONE
+		// echo "idvotazioni="; echo $id;
+		if ($id!=0)	// SE L'ID DELLA VOTAZIONE E' DIVERSO DA 0 VUOL DIRE CHE L'UTENTE HA VOTATO QUEL FILM
+			echo "Hai gi&agrave votato questo film e il tuo voto &egrave stato $voto";
+		// FINE CONTROLLO
+		else 
 		{
-			// MEDIA ARITMETICA DEI VOTI RICEVUTI DAL FILM
-			$query5="SELECT sum(voto) as somma FROM Votazioni WHERE id_film='$id_film'";
-			$result5=mysql_query($query5, $conn)
-			  or die("Query fallita!" . mysql_error());
-			$voti=mysql_fetch_array($result5);
-			$somma_tot=$voti['somma'];	// Somma totale dei voti ricevuti dal film		
-			// $num_voti=$voti['idvotazione'];
-			// echo "voti="; echo $voti['somma'];
-			$query6="SELECT count(*) as utenti FROM Votazioni WHERE id_film='$id_film'";
-			$result6=mysql_query($query6, $conn)
-			  or die("Query fallita!" . mysql_error());
-			$utenti=mysql_fetch_array($result6);
-			// echo "utenti="; echo $utenti['utenti'];
-			$n_utenti=$utenti['utenti'];	// Numero di utenti che ha votato il film
-			if ($n_utenti==0)	echo "Non ha ancora votato nessuno questo film.<br><br>";
-			else 
+			echo "Ti &egrave; piaciuto il film? Dagli un voto!";
+			echo "<form method=POST action=film.php?id=$id_film>";
+			echo "<select name='voto' onchange='this.form.submit()'";
+			echo "<OPTION value=' - Dai un Voto! - '>VOTA!</OPTION>";
+			for ($i=0; $i<=10; $i++) 
 			{
-				$media=$somma_tot/$n_utenti;
-				echo "<center>Voto medio del film: $media,";
-				if ($n_utenti==1) echo " ha votato un solo utente.";
-				else	echo " hanno votato in $n_utenti.";
-				echo "<br>";
-				for ($i=0;$i<$media;$i++)
-					echo"* ";
-				echo "</center>";
+				if ($i==0)
+					echo "<OPTION value=' - Dai un Voto! - '>VOTA!</OPTION>";
+				else
+		                        echo "<option value=$i name=voto>$i</option>";
 			}
-			// FINE MEDIA
-			// CONTROLLA SE L'UTENTE HA GIA' VOTATO IL FILM
-			$query4="SELECT * FROM Votazioni WHERE id_film='$id_film' AND id_utente='$id_utente'";
-			$result4=mysql_query($query4, $conn)
-			  or die("Query fallita!" . mysql_error());
-			$votazioni=mysql_fetch_array($result4);
-			$voto=$votazioni['voto'];
-			$id=$votazioni['idvotazione'];	// PRELEVA L'ID DELLA VOTAZIONE
-			// echo "idvotazioni="; echo $id;
-			if ($id!=0)	// SE L'ID DELLA VOTAZIONE E' DIVERSO DA 0 VUOL DIRE CHE L'UTENTE HA VOTATO QUEL FILM
-				echo "Hai gi&agrave votato questo film e il tuo voto &egrave stato $voto";
-			// FINE CONTROLLO
-			else 
-			{
-				echo "Ti &egrave; piaciuto il film? Dagli un voto!";
-				echo "<form method=POST action=film.php?id=$id_film>";
-				echo "<select name='voto' onchange='this.form.submit()'";
-				echo "<OPTION value=' - Dai un Voto! - '>VOTA!</OPTION>";
-				for ($i=0; $i<=10; $i++) 
-				{
-					if ($i==0)
-						echo "<OPTION value=' - Dai un Voto! - '>VOTA!</OPTION>";
-					else
-			                        echo "<option value=$i name=voto>$i</option>";
-				}
-				echo "</input></select></form>";
-			}
+			echo "</input></select></form>";
 		}
+	
 	}
 	if ($_POST['voto']) // Se ha selezionato un voto:
 	{	
@@ -152,4 +148,4 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 }
 	
 else
-	echo "Devi prima fare il <a href=login.php>Login</a>";
+	echo "Non sei ancora loggato! fai il <a href=login.php>Login</a> o <a href=register.php>Registrati</a>";
