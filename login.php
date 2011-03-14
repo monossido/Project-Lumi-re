@@ -50,14 +50,19 @@ else
 		if (!$password2)	// Se vuoto vuol dire che la query non è andata -> username errato
 			echo "Username errato! <a href=login.php>Riprova</a>.";
 		else
-		{
-			echo $stato['username'];
-			if (SHA1($password) != get_pwd($login))
-				echo "<br>Errore! Password Errata! <a href=login.php>Riprova</a>";
-			else
+		{	$passwd=get_pwd($login);
+			if(SHA1($password)==$passwd)
 			{
 				echo "Login Effettuato! Torna alla <a href=index.php>Home</a>";
 				$_SESSION['logged']=$login;
+			}
+			else if ($passwd==-1)
+			{
+				echo "<br>Errore! Account non verificato, clicca sul link che ti abbiamo inviato via e-mail e <a href=login.php>Riprova</a>";
+			}
+			else
+			{
+				echo "<br>Errore! Password Errata! <a href=login.php>Riprova</a>";
 			}
 		}
 	}
