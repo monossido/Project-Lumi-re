@@ -82,10 +82,9 @@ if ($_POST['submit']) {
 		  or die("Query fallita!" . mysql_error());
 		$stato=mysql_fetch_array($result);
 		$query= "INSERT INTO Utenti (username,password,voto,mail,verificato,temp) VALUES ('$login', '".SHA1($password)."', '".$voto['Round']."', '$mail', '0', '$code')";
-		echo $code;
 		mysql_query($query,$conn)
 			or die("Query fallita" . mysql_error($conn));
-		mail ("$mail", "Conferma Indirizzo Project Lumière", "Clicca questo link per validare il tuo account! http://monossido.ath.cx/bau/cinema/verifica.php?code=$code&nome=$login", "From: Project Lumière");
+		mail ("$mail", "Conferma Indirizzo Project Lumière", "Clicca questo link per validare il tuo account! http://monossido.ath.cx/bau/cinema/verifica.php?code=$code&nome=$login", "From: Project_Lumière");
 		echo "Registrazione Effettuata! Devi validare il tuo account! Per farlo, clicca il link che trovi nella mail che &egrave; stata mandata all'indirizzo che ci hai fornito.";
  	}
 }
