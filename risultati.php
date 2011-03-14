@@ -88,32 +88,29 @@ if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risultati 
 			echo "</table>";
 
 		//Film votati da...
-			if($stato['Round']==1)
-				$query="SELECT Username,Voto1 FROM Utenti WHERE Voto1!=0 ORDER BY Voto1";
-			else if($stato['Round']==2)
-				$query="SELECT Username,Voto2 FROM Utenti WHERE Voto1!=0 ORDER BY Voto2";
+			$query="SELECT IdUtente,IdFilm FROM Voti WHERE UltimaVotazione=1 AND Round=".($stato['Round']-1)." ORDER BY IdFilm";
 			$result=mysql_query($query, $conn)
 			  or die("Query fallita!" . mysql_error());
 			while($data=mysql_fetch_array($result))
 			{
-				$usernames[]=$data[0];
-				$ids[]=$data[1];
+				$ids_utenti[]=$data[0];
+				$ids_film[]=$data[1];
 			}
 			
 			echo "<p align=center>Tutti i film votati:</p>";
 
 			echo "<TABLE width=\"55%\" border=1 align=center cellpadding=5><th>Titolo</th><th>Votati da</th>";
-			for($i=0;$i<count($usernames);$i++)
+			for($i=0;$i<count($ids_utenti);$i++)
 			{
-					$query="SELECT * FROM Film WHERE id_film=".$ids[$i]."";
+					$query="SELECT * FROM Film WHERE id_film=".$ids_film[$i];
 					$result=mysql_query($query, $conn)
 				 		 or die("Query fallita!" . mysql_error());
 					$film=mysql_fetch_assoc($result);
-					echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['titolo'].">".$film['titolo']."</a></td><td>$usernames[$i]";
-				while($ids[$i]==$ids[$i+1])
+					echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['titolo'].">".$film['titolo']."</a></td><td>".id_to_user($ids_utenti[$i]);
+				while($ids_film[$i]==$ids_film[$i+1])
 				{
 					$i++;
-					echo "<br />$usernames[$i]";
+					echo "<br />".id_to_user($ids_utenti[$i]);
 				}
 				echo "</td></tr>";
 				

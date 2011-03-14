@@ -189,6 +189,8 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				mysql_query($query4, $conn);
 			$query5="UPDATE Stato SET Round=0,VotazioniAperte=0";
 				mysql_query($query5, $conn);
+			$query5="UPDATE Voti SET UltimaVotazione=0";
+				mysql_query($query5, $conn);
 			echo "Ho Azzerato Tutto";
 		}else if($_POST['avvia'])
 		{
@@ -203,6 +205,8 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 			$query4="UPDATE Film SET voti=0, passato=0";
 				mysql_query($query4, $conn);
 			$query5="UPDATE Stato SET Round=0,VotazioniAperte=1";
+				mysql_query($query5, $conn);
+			$query5="UPDATE Voti SET UltimaVotazione=0";
 				mysql_query($query5, $conn);
 			echo "Ho Azzerato Tutto e avviato una nuova Votazione";
 		}

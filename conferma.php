@@ -36,16 +36,24 @@ $voto=mysql_fetch_array($result);
 
 if((isset($_SESSION['logged'])) && ($voto['Voto']==$round) && ($id))
 { 
-	$query="UPDATE Film SET voti=voti+1 WHERE id_film='$id'";
+	$query="UPDATE Film SET voti=voti+1 WHERE id_film='$id'";//Aggiorno voti film
 	$result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
-	if($round==0)
-		$query="UPDATE Utenti SET Voto=Voto+1,Voto1=$id WHERE Username='".$_SESSION['logged']."'";
-	else if($round==1)
-		$query="UPDATE Utenti SET Voto=Voto+1,Voto2=$id WHERE Username='".$_SESSION['logged']."'";
-	$result=mysql_query($query, $conn)
-  or die("Query fallita!" . mysql_error());
-echo "Voto confermato!";
+
+
+	$query3="SELECT id_utente FROM Utenti WHERE username='$_SESSION[logged]'";//Salvo la votazione nella tabella Voti
+	$result3=mysql_query($query3, $conn)
+	  or die("Query fallita!" . mysql_error());
+	$utente=mysql_fetch_array($result3);	
+	$id_utente=$utente['id_utente'];
+	$query="INSERT INTO Voti (IdUtente,IdFilm,Round,UltimaVotazione,Data) VALUES ('$id_utente','$id','$round',1,NOW())";
+	mysql_query($query, $conn)
+  		or die("Query fallita!" . mysql_error());
+
+	$query2="UPDATE Utenti SET Voto=Voto+1 WHERE Username='".$_SESSION['logged']."'";//Aggiorno voto utente
+	mysql_query($query2, $conn)
+  		or die("Query fallita!" . mysql_error());
+	echo "Voto confermato!";
 }else
 {
 	echo "Hai gia' votato brutto stronzo.";
