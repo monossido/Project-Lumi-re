@@ -77,7 +77,6 @@ if ($_POST['submit']) {
 
 		mysql_select_db(dbname);
   		$code = rand(1, 9999);	// Genera un numero casuale
-		echo $code;
 		$query="SELECT * FROM Stato";
 		$result=mysql_query($query, $conn)
 		  or die("Query fallita!" . mysql_error());
