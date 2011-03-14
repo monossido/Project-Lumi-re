@@ -101,5 +101,18 @@ function set_film($film,$i) {
 	}
 }
 
+function id_to_user($id)
+{
+	$conn=mysql_connect(dbhost, dbuser, dbpwd)
+		or die("Connessione al server MySQL fallita!");
+	mysql_select_db(dbname);
+
+	$query="SELECT Username FROM Utenti WHERE id_utente=$id";
+	$result=mysql_query($query, $conn)
+		or die("Query fallita!" . mysql_error());
+	$user=mysql_fetch_assoc($result);
+	return $user['Username'];
+}
+
 
 ?>
