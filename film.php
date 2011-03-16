@@ -18,6 +18,8 @@
  */
 require("configure.php");
 require("library.php");
+include("Zend/Loader.php");
+Zend_Loader::loadClass('Zend_Gdata_YouTube');
 session_start();
 page_start("Project Lumi&eacute;re - Film");
 
@@ -34,7 +36,30 @@ $visto=$film['visto'];
 $titolo=$film['titolo'];
 # echo $titolo;
 
-echo "<p><H2><center>$titolo</H2></p></center>";
+echo "<p align=center><H2>$titolo</H2></p>";
+
+//Youtube
+$yt = new Zend_Gdata_YouTube();
+$search = $yt->newVideoQuery();
+$search->setQuery($titolo."trailer hd");
+$search->setOrderBy("relevance");
+$search->setMaxResults("1");
+$result = $yt->getVideoFeed($search);
+
+$entry = $yt->getVideoEntry($result[0]->getVideoId());
+$videoTitle = $entry->mediaGroup->title;
+$videoUrl = findFlashUrl($entry);
+
+echo "<p align=center><b>$videoTitle</b><br /><br />
+<object width=\"425\" height=\"350\">
+<param name=\"movie\" value=\"${videoUrl}&autoplay=1\"></param>
+<param name=\"wmode\" value=\"transparent\"></param>
+<param name=\"allowFullScreen\" value=\"true\"></param>
+<embed src=\"${videoUrl}&autoplay=0&hd=1&fs=1\" type=\"application/x-shockwave-flash\" wmode=\"transparent\" allowfullscreen=true
+width=1280 height=745></embed>
+</object></p>";
+
+
 
 // MEDIA ARITMETICA DEI VOTI RICEVUTI DAL FILM
 $query5="SELECT sum(voto) as somma FROM Votazioni WHERE id_film='$id_film'";
@@ -149,3 +174,15 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 	
 else
 	echo "Non sei ancora loggato! fai il <a href=login.php>Login</a> o <a href=register.php>Registrati</a>";
+
+function findFlashUrl($entry)
+{
+    foreach ($entry->mediaGroup->content as $content) {
+        if ($content->type === 'application/x-shockwave-flash') {
+            return $content->url;
+        }
+    }
+    return null;
+}
+
+?>

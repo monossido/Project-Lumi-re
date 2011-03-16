@@ -31,5 +31,10 @@ There is not official build or any kind of ETA.
 
 
 Some code/libraries are used in the project:
+
 Libchart (GPL v3)
 	http://naku.dohcrew.com/libchart/
+
+Zend Framework 1.11.4 Release (r23791).
+Copyright (c) 2005-2010, Zend Technologies USA, Inc.
+All rights reserved.
