@@ -38,28 +38,6 @@ $titolo=$film['titolo'];
 
 echo "<p align=center><H2>$titolo</H2></p>";
 
-//Youtube
-$yt = new Zend_Gdata_YouTube();
-$search = $yt->newVideoQuery();
-$search->setQuery($titolo."trailer hd");
-$search->setOrderBy("relevance");
-$search->setMaxResults("1");
-$result = $yt->getVideoFeed($search);
-
-$entry = $yt->getVideoEntry($result[0]->getVideoId());
-$videoTitle = $entry->mediaGroup->title;
-$videoUrl = findFlashUrl($entry);
-
-echo "<p align=center><b>$videoTitle</b><br /><br />
-<object width=\"425\" height=\"350\">
-<param name=\"movie\" value=\"${videoUrl}&autoplay=1\"></param>
-<param name=\"wmode\" value=\"transparent\"></param>
-<param name=\"allowFullScreen\" value=\"true\"></param>
-<embed src=\"${videoUrl}&autoplay=0&hd=1&fs=1\" type=\"application/x-shockwave-flash\" wmode=\"transparent\" allowfullscreen=true
-width=1280 height=745></embed>
-</object></p>";
-
-
 
 // MEDIA ARITMETICA DEI VOTI RICEVUTI DAL FILM
 $query5="SELECT sum(voto) as somma FROM Votazioni WHERE id_film='$id_film'";
@@ -75,25 +53,45 @@ $result6=mysql_query($query6, $conn)
 $utenti=mysql_fetch_array($result6);
 // echo "utenti="; echo $utenti['utenti'];
 $n_utenti=$utenti['utenti'];	// Numero di utenti che ha votato il film
-if ($n_utenti==0)	echo "Non ha ancora votato nessuno questo film.<br><br>";
+echo "<p align=center>";
+if ($n_utenti==0)	echo "Non hai ancora votato nessuno questo film.<br><br>";
 else 
 {
 	$media=$somma_tot/$n_utenti;
-	echo "<center>Voto medio del film: $media,";
+	echo "Voto medio del film: $media,";
 	if ($n_utenti==1) echo " ha votato un solo utente.";
 	else	echo " hanno votato in $n_utenti.";
 	echo "<br>";
 	for ($i=0;$i<$media;$i++)
 		echo"* ";
-	echo "</center>";
 }
+	echo "</p>";
 // FINE MEDIA
 
 if(isset($_SESSION['logged'])) # Se l'utente è loggato
 {
 	if (!$_POST['voto']&&!$_POST['sicuro']) // Se entra nella pagina per la prima volta:
 	{
-		# echo "<center>";
+		//Youtube
+		$yt = new Zend_Gdata_YouTube();
+		$search = $yt->newVideoQuery();
+		$search->setQuery($titolo."trailer hd");
+		$search->setOrderBy("relevance");
+		$search->setMaxResults("1");
+		$result = $yt->getVideoFeed($search);
+
+		$entry = $yt->getVideoEntry($result[0]->getVideoId());
+		$videoTitle = $entry->mediaGroup->title;
+		$videoUrl = findFlashUrl($entry);
+
+		echo "<p align=center><b>$videoTitle</b><br /><br />
+		<object width=\"425\" height=\"350\">
+		<param name=\"movie\" value=\"${videoUrl}&autoplay=1\"></param>
+		<param name=\"wmode\" value=\"transparent\"></param>
+		<param name=\"allowFullScreen\" value=\"true\"></param>
+		<embed src=\"${videoUrl}&autoplay=0&hd=1&fs=1\" type=\"application/x-shockwave-flash\" wmode=\"transparent\" allowfullscreen=true
+		width=1280 height=745></embed>
+		</object></p><p align=center>";
 		
 		$query3="SELECT * FROM Utenti WHERE username='$_SESSION[logged]'";
 		$result3=mysql_query($query3, $conn)
@@ -114,8 +112,8 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		// FINE CONTROLLO
 		else 
 		{
-			echo "Ti &egrave; piaciuto il film? Dagli un voto!";
-			echo "<form method=POST action=film.php?id=$id_film>";
+			echo "Ti &egrave; piaciuto il film? Dagli un <b>voto!</b></p>";
+			echo "<form align=center method=POST action=film.php?id=$id_film>";
 			echo "<select name='voto' onchange='this.form.submit()'";
 			echo "<OPTION value=' - Dai un Voto! - '>VOTA!</OPTION>";
 			for ($i=0; $i<=10; $i++) 
@@ -125,8 +123,9 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				else
 		                        echo "<option value=$i name=voto>$i</option>";
 			}
-			echo "</input></select></form>";
+			echo "</input></select></form><br /><p align=center>I voti <b>non</b> sono anonimi</p>";
 		}
+		echo "";
 	
 	}
 	if ($_POST['voto']) // Se ha selezionato un voto:
@@ -142,15 +141,16 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		# echo $film['titolo'];
 
 		$voto=$_POST['voto'];
-		
+		echo "<p align=center>";
 		if ($voto==10)
 			echo "<font color=red>WOW! Stai per dare il MASSIMO dei voti al film!</font> Sei proprio sicuro che lo meriti? :)";
 		if ($voto==1)
 			echo "<font color=red>WOW! Stai per dare il MINIMO dei voti al film!</font> Sei proprio sicuro che lo meriti? :)";		
 		if ($voto>=2 && $voto<=9)
-			echo "Vuoi mettere $voto al film?";
-		echo "<form method=POST action=film.php?id=".$id_film."&voto=".$voto."><input type=submit name=sicuro value='SI!'></input></form>";	
+			echo "<p align=center>Vuoi mettere $voto al film?";
+		echo "<form align=center method=POST action=film.php?id=".$id_film."&voto=".$voto."><input type=submit name=sicuro value='SI!'></input></form>";	
 	}
+	echo "<p align=center>";
 	if ($_POST['sicuro'])
 	{	
 		// echo "ok";
@@ -168,12 +168,13 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		$query="INSERT INTO Votazioni (id_utente,id_film,voto) VALUES ('$id_utente', '$id_film','$voto')";
 		mysql_query($query, $conn)
 		  or die("Query fallita! " . mysql_error());
-		echo "Complimenti! Hai votato il film!";
+		echo "Complimenti! Hai votato il film!<br />Torna al <a href=film.php?id=$id_film>film</a>.";
 	}
 }
 	
 else
 	echo "Non sei ancora loggato! fai il <a href=login.php>Login</a> o <a href=register.php>Registrati</a>";
+echo "</p>";
 
 function findFlashUrl($entry)
 {
