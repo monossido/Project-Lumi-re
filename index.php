@@ -21,7 +21,8 @@ require("library.php");
 session_start();
 
 echo "<HTML>
-<HEAD><TITLE>Project Lumi&eacute;re 0.1</TITLE></HEAD>
+<HEAD><TITLE>Project Lumi&eacute;re 0.1</TITLE>
+</head></HEAD>
 <BODY>
 <link rel='stylesheet' type='text/css' href='style.css'>
 <div id='container'>
@@ -29,7 +30,7 @@ echo "<HTML>
 	 	 <center><img src='images/logo.jpg' border='0'></center>
 	 </div>
 	  <HR>";
-
+	  
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die('Connessione al server MySQL fallita!');
 mysql_select_db(dbname);
@@ -132,12 +133,10 @@ if($risoluzione=='0' && $visti==0 || $risoluzione==null && $visti==null)	$query=
 $result=mysql_query($query, $conn)
   or die("Query fallita! " . mysql_error());
 
-echo "<TABLE width=\"100%\" border cellpadding=\"5\"><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Visto</th><th>Vota</th>";
-
-
+echo "<TABLE width=\"100%\" border cellpadding=\"5\"><thead><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Visto</th><th>Vota</th></thead>";
 while($row=mysql_fetch_array($result))
 {
-	echo "<form action=film.php method=get><tr><td><a href=film.php?id=".$row['id_film'].">".$row['titolo']."</a></td><td>".$row['risoluzione']."</td><td>".$row['lingua']."</td><td>".$row['durata']."</td>";
+	echo "<form action=film.php method=get><tbody><tr><td><b><a href=film.php?id=".$row['id_film'].">".$row['titolo']."</a></b></td><td>".$row['risoluzione']."</td><td>".$row['lingua']."</td><td>".$row['durata']."</td>";
 	#echo "$row['visto']";
 	if ($row['visto']=="0")
 		#<td>".$row['visto']."</td>";
@@ -151,7 +150,7 @@ while($row=mysql_fetch_array($result))
 	echo "</tr>";
 }
 
-echo "</table>";
+echo "</tbody></table>";
 # echo "<p align='center'>Visualizza i <a href='risultati.php'>risultati</a> <b>parziali</b></p>";
 
 
