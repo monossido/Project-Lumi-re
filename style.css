@@ -76,5 +76,17 @@ width: 230px;
  margin: 6px 4px 0 5px;	
  float: left;
 }
+table {font: 100% 'Lucida Grande', 'Lucida Sans Unicode', 'Trebuchet MS', sans-serif;padding: 0; margin: 0; border-collapse: collapse; color: #333; background: #F3F5F7;}
+table a {color: #3A4856; text-decoration: none; border-bottom: 1px solid #C6C8CB;}  
+table a:visited {color: #777;}
+table a:hover {color: #000;}  
+table caption {text-align: left; text-transform: uppercase;  padding-bottom: 10px; font: 200% 'Lucida Grande', 'Lucida Sans Unicode', 'Trebuchet MS', sans-serif;}
+table thead th {background: #3A4856; padding: 15px 10px; color: #fff; text-align: left; font-weight: normal;}
+table tbody, table thead {border-left: 1px solid #EAECEE; border-right: 1px solid #EAECEE;}
+table tbody {border-bottom: 1px solid #EAECEE;}                      
+table tbody td, table tbody th {padding: 10px; background: url('http://www.dodoftw.it/images/td_back.gif') repeat-x; text-align: left;}
+table tbody tr {background: #F3F5F7;}
+table tbody tr.odd {background: #F0F2F4;}
+table tbody  tr:hover {background: #EAECEE; color: #111;}
 </style>
->>>>>>> b0f504be14cac5e19b207afb638625ab2641fde0:style.css
+
