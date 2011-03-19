@@ -18,7 +18,18 @@
  */
 require("library.php");
 session_start();
-page_start("Project Lumi&eacute;re - registrati");
+
+echo "<HTML>
+<HEAD><TITLE>Project Lumi&eacute;re 0.1</TITLE>
+<link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico'>
+</head></HEAD>
+<BODY>
+<link rel='stylesheet' type='text/css' href='style.css'>
+<div id='container'>
+	 <div id='header'>
+	 	 <center><img src='images/logo.jpg' border='0'></center>
+	 </div>
+	  <HR>";
 
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 or die("Connessione al server MySQL fallita!");

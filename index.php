@@ -22,6 +22,7 @@ session_start();
 
 echo "<HTML>
 <HEAD><TITLE>Project Lumi&eacute;re 0.1</TITLE>
+<link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico'>
 </head></HEAD>
 <BODY>
 <link rel='stylesheet' type='text/css' href='style.css'>
