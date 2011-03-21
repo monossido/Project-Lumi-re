@@ -103,12 +103,8 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		<embed src=\"${videoUrl}&autoplay=0&hd=1&fs=1\" type=\"application/x-shockwave-flash\" wmode=\"transparent\" allowfullscreen=true
 		width=1280 height=745></embed>
 		</object></p><p align=center>";
-		
-		$query3="SELECT * FROM Utenti WHERE username='$_SESSION[logged]'";
-		$result3=mysql_query($query3, $conn)
-		  or die("Query fallita!" . mysql_error());
-		$utente=mysql_fetch_array($result3);	
-		$id_utente=$utente['id_utente'];
+	
+		$id_utente=user_to_id($_SESSION['logged']);
 	
 		// CONTROLLA SE L'UTENTE HA GIA' VOTATO IL FILM
 		$query4="SELECT * FROM Votazioni WHERE id_film='$id_film' AND id_utente='$id_utente'";
@@ -164,13 +160,8 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 	echo "<p align=center>";
 	if ($_POST['sicuro'])
 	{	
-		// echo "ok";
-		$login=$_SESSION['logged'];
-		$query2="SELECT * FROM Utenti WHERE Username='$login'";
-		$result2=mysql_query($query2, $conn)
-		  or die("Query fallita! " . mysql_error());
-		$utente=mysql_fetch_array($result2);
-		$id_utente=$utente['id_utente'];
+
+		$id_utente=user_to_id($_SESSION['logged']);
 		$voto=$_GET['voto'];
 		$id_film=$_GET['id'];
 		/* echo "id_utente="; echo $id_utente;

@@ -114,5 +114,17 @@ function id_to_user($id)
 	return $user['Username'];
 }
 
+function user_to_id($user)
+{
+	$conn=mysql_connect(dbhost, dbuser, dbpwd)
+		or die("Connessione al server MySQL fallita!");
+	mysql_select_db(dbname);
+
+	$query="SELECT id_utente FROM Utenti WHERE Username=$user";
+	$result=mysql_query($query, $conn)
+		or die("Query fallita!" . mysql_error());
+	$id=mysql_fetch_assoc($result);
+	return $id['id_utente'];
+}
 
 ?>
