@@ -107,7 +107,7 @@ function id_to_user($id)
 		or die("Connessione al server MySQL fallita!");
 	mysql_select_db(dbname);
 
-	$query="SELECT Username FROM Utenti WHERE id_utente=$id";
+	$query="SELECT Username FROM Utenti WHERE id_utente='$id'";
 	$result=mysql_query($query, $conn)
 		or die("Query fallita!" . mysql_error());
 	$user=mysql_fetch_assoc($result);
@@ -120,7 +120,7 @@ function user_to_id($user)
 		or die("Connessione al server MySQL fallita!");
 	mysql_select_db(dbname);
 
-	$query="SELECT id_utente FROM Utenti WHERE Username=$user";
+	$query="SELECT id_utente FROM Utenti WHERE Username='$user'";
 	$result=mysql_query($query, $conn)
 		or die("Query fallita!" . mysql_error());
 	$id=mysql_fetch_assoc($result);
