@@ -79,11 +79,7 @@ else
 	echo "</p>";
 // FINE MEDIA
 
-if(isset($_SESSION['logged'])) # Se l'utente è loggato
-{
-	if (!$_POST['voto']&&!$_POST['sicuro']) // Se entra nella pagina per la prima volta:
-	{
-		//Youtube
+//Youtube
 		$yt = new Zend_Gdata_YouTube();
 		$search = $yt->newVideoQuery();
 		$search->setQuery($titolo."trailer hd");
@@ -93,7 +89,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 
 		$entry = $yt->getVideoEntry($result[0]->getVideoId());
 		$videoTitle = $entry->mediaGroup->title;
-		$videoUrl = findFlashUrl($entry);
+		$videoUrl = $entry->mediaGroup->content[0]->url;
 
 		echo "<p align=center><b>$videoTitle</b><br /><br />
 		<object width=\"425\" height=\"350\">
@@ -103,7 +99,11 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 		<embed src=\"${videoUrl}&autoplay=0&hd=1&fs=1\" type=\"application/x-shockwave-flash\" wmode=\"transparent\" allowfullscreen=true
 		width=1280 height=745></embed>
 		</object></p><p align=center>";
-	
+
+if(isset($_SESSION['logged'])) # Se l'utente è loggato
+{
+	if (!$_POST['voto']&&!$_POST['sicuro']) // Se entra nella pagina per la prima volta:
+	{	
 		$id_utente=user_to_id($_SESSION['logged']);
 	
 		// CONTROLLA SE L'UTENTE HA GIA' VOTATO IL FILM
@@ -178,14 +178,5 @@ else
 	echo "Non sei ancora loggato! fai il <a href=login.php>Login</a> o <a href=register.php>Registrati</a>";
 echo "</p>";
 
-function findFlashUrl($entry)
-{
-    foreach ($entry->mediaGroup->content as $content) {
-        if ($content->type === 'application/x-shockwave-flash') {
-            return $content->url;
-        }
-    }
-    return null;
-}
 
 ?>
