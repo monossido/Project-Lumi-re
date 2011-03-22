@@ -144,8 +144,8 @@ while($row=mysql_fetch_array($result))
 		echo "<td>No</td>";
 	else
 		echo "<td>Si</td>";
-	//Per votare dalla home bisogna, essere loggati, non aver già votato, essere ancora nel primo round
-	if(isset($_SESSION['logged']) && !$utente['Voto'] && !$stato['Round'])
+	//Per votare dalla home bisogna, essere loggati, avere le votazioni aperte, non aver già votato, essere ancora nel primo round
+	if(isset($_SESSION['logged']) && $stato['VotazioniAperte'] && !$utente['Voto'] && !$stato['Round'])
 		echo "<td><a href='vota.php?id=".$row['id_film']."&round=0'>Vota</a></td>";
 	else echo "<td width='8%'><em>Non puoi votare</em></td>";
 	echo "</tr>";
