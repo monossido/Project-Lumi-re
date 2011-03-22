@@ -41,7 +41,8 @@ if((isset($_SESSION['logged'])) && ($voto['Voto']==$round) && ($id))
   or die("Query fallita!" . mysql_error());
 
 
-	$id_utente=user_to_id($_SESSION['logged'])//Salvo la votazione nella tabella Voti
+	$id_utente=user_to_id($_SESSION['logged']);//Salvo la votazione 
+nella tabella Voti
 	$query="INSERT INTO Voti (IdUtente,IdFilm,Round,UltimaVotazione,Data) VALUES ('$id_utente','$id','$round',1,NOW())";
 	mysql_query($query, $conn)
   		or die("Query fallita!" . mysql_error());
