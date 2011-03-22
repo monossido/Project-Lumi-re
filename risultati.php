@@ -31,7 +31,11 @@ $result=mysql_query($query, $conn)
   or die("Query fallita!" . mysql_error());
 $stato=mysql_fetch_array($result);
 
-if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risultati solo quando si è iniziata una votazione cioè round>0 oppure VotazioniAperte=1 e round=0
+if(!isset($_SESSION['logged']))
+{
+	echo '<p  align=center>Per vedere i risultati parziali devi essere loggato</p>';
+}
+else if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risultati solo quando si è iniziata una votazione cioè round>0 oppure VotazioniAperte=1 e round=0
 {
 	$query5="SELECT Voto FROM Utenti WHERE Username='".$_SESSION['logged']."'";
 	$result5=mysql_query($query5, $conn)
