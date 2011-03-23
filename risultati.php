@@ -83,7 +83,7 @@ else if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risul
 			echo "<TABLE width=\"55%\" border=1 align=center cellpadding=5><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Vota</th>";
 			while($film=mysql_fetch_array($result))
 			{
-				echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['id_film'].">".$film['titolo']."</a></td><td>".$film['risoluzione']."</td><td>".$film['lingua']."</td><td>".$film['durata']."</td>";
+				echo "<form action=film.php method=get><tr><td><a href=film.php?id=".$film['id_film'].">".$film['titolo']."</a></td><td>".$film['risoluzione']."</td><td>".$film['lingua']."</td><td>".$film['durata']."</td>";
 				if(isset($_SESSION['logged']) && $voto['Voto']=="1" && $stato['VotazioniAperte']==1)
 					echo "<td><a href='vota.php?id=".$film['id_film']."&round=".$stato['Round']."'>Vota</a></td>";
 				else echo "<td width='8%'><em>Non puoi votare</em></td>";
@@ -110,7 +110,7 @@ else if($stato['VotazioniAperte'] || $stato['Round']>0)//Devo far vedere i risul
 					$result=mysql_query($query, $conn)
 				 		 or die("Query fallita!" . mysql_error());
 					$film=mysql_fetch_assoc($result);
-					echo "<form action=film.php method=get><tr><td><a href=film.php?titolo=".$film['id_film'].">".$film['titolo']."</a></td><td>".id_to_user($ids_utenti[$i]);
+					echo "<form action=film.php method=get><tr><td><a href=film.php?id=".$film['id_film'].">".$film['titolo']."</a></td><td>".id_to_user($ids_utenti[$i]);
 				while($ids_film[$i]==$ids_film[$i+1])
 				{
 					$i++;
