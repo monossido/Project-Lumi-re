@@ -45,7 +45,8 @@ $film=mysql_fetch_array($result);
 $id_film=$film['id_film'];
 $visto=$film['visto'];
 $titolo=$film['titolo'];
-# echo $titolo;
+if($id_film==90)//Fix Léon...non so come risolvere altrimenti :(
+	$titolo="L&eacuteon";
 
 echo "<p align=center><H2>$titolo</H2></p>";
 
@@ -80,6 +81,7 @@ else
 // FINE MEDIA
 
 //Youtube
+		$titolo=str_replace("&eacute","e",$titolo);//Fix Léon...non so come risolvere altrimenti :(
 		$yt = new Zend_Gdata_YouTube();
 		$search = $yt->newVideoQuery();
 		$search->setQuery($titolo."trailer hd");
