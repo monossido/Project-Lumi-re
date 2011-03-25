@@ -183,7 +183,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				mysql_query($query1, $conn);
 			$query2="UPDATE Utenti SET Voto=0";
 				mysql_query($query2, $conn);
-			$query3="UPDATE Film SET visto=1 WHERE passato=1";
+			$query3="UPDATE Film SET visto=1 WHERE passato=$round";
 				mysql_query($query3, $conn);
 			$query4="UPDATE Film SET voti=0, passato=0";
 				mysql_query($query4, $conn);
@@ -200,7 +200,7 @@ if(isset($_SESSION['logged'])) # Se l'utente è loggato
 				mysql_query($query1, $conn);
 			$query2="UPDATE Utenti SET Voto=0";
 				mysql_query($query2, $conn);
-			$query3="UPDATE Film SET visto=1 WHERE passato=1";
+			$query3="UPDATE Film SET visto=1 WHERE passato=$round";
 				mysql_query($query3, $conn);
 			$query4="UPDATE Film SET voti=0, passato=0";
 				mysql_query($query4, $conn);
