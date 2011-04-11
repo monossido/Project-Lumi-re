@@ -51,7 +51,7 @@ $utente=mysql_fetch_array($result);
 
 
 echo '<HTML>
-<HEAD><TITLE>Project Lumi&eacute;re $title</TITLE><script type="text/javascript" src="js/jquery.js"></script>
+<HEAD><TITLE>Project Lumi&eacute;re</TITLE><script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.watermark.js"></script>
 <script type="text/javascript">
  
