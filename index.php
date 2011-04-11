@@ -20,9 +20,21 @@ require("configure.php");
 require("library.php");
 session_start();
 
-page_start("");
-echo "<HR />";
-	  
+$visti=$_GET['visti'];
+$risoluzione=$_GET['risoluzione'];
+if($risoluzione=='1' && $visti=='2')	$queryF="SELECT * FROM Film WHERE Film.risoluzione=1080";
+if($risoluzione=='2' && $visti=='2')	$queryF="SELECT * FROM Film WHERE Film.risoluzione=720";
+if($risoluzione=='1' && $visti=='1')	$queryF="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=1";
+if($risoluzione=='2' && $visti=='1')	$queryF="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=1";
+if($risoluzione=='1' && $visti=='0')	$queryF="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=0";
+if($risoluzione=='2' && $visti=='0')	$queryF="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=0";
+if($risoluzione=='1' && $visti==null)	$queryF="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=0";
+if($risoluzione=='2' && $visti==null)	$queryF="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=0";
+if($visti=='2' && $risoluzione==0)	$queryF="SELECT * FROM Film";
+if($visti=='1' && $risoluzione==0)	$queryF="SELECT * FROM Film WHERE Film.visto=1";
+if($visti=='0' && $risoluzione==0)	$queryF="SELECT * FROM Film WHERE Film.visto=0";
+if($risoluzione=='0' && $visti==0 || $risoluzione==null && $visti==null)	$queryF="SELECT * FROM Film WHERE Film.visto=0";
+
 $conn=mysql_connect(dbhost, dbuser, dbpwd)
 	or die('Connessione al server MySQL fallita!');
 mysql_select_db(dbname);
@@ -32,12 +44,65 @@ $result2=mysql_query($query2, $conn)
   or die('Query fallita!' . mysql_error());
 $stato=mysql_fetch_array($result2);
 
+$query="SELECT Voto,amministratore FROM Utenti WHERE Username='".$_SESSION['logged']."'";
+$result=mysql_query($query, $conn)
+  or die('Query fallita!' . mysql_error());
+$utente=mysql_fetch_array($result);
+
+
+echo '<HTML>
+<HEAD><TITLE>Project Lumi&eacute;re $title</TITLE><script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.watermark.js"></script>
+<script type="text/javascript">
+ 
+ 
+      $(document).ready(function() {
+
+$("#faq_search_input").watermark("Begin Typing to Search");
+
+$("#faq_search_input").keyup(function()
+{
+var faq_search_input = $(this).val();
+var dataString = \'keyword=\'+ faq_search_input + \'&votazioni=\' + '.$stato['VotazioniAperte'].' + \'&round=\' + '.$stato['Round'].' + \'&voto=\' + '.$utente['Voto'].' + \'&query=\' + \''.$queryF.'\';
+if(faq_search_input.length>=0)
+
+{
+$.ajax({
+type: "GET",
+url: "ajax-search.php",
+data: dataString,
+beforeSend:  function() {
+
+$(\'input#faq_search_input\').addClass(\'loading\');
+
+},
+success: function(server_response)
+{
+
+$(\'#searchresultdata\').html(server_response).show();
+$(\'span#faq_category_title\').html(faq_search_input);
+
+if ($(\'input#faq_search_input\').hasClass("loading")) {
+ $("input#faq_search_input").removeClass("loading");
+        } 
+
+}
+});
+}return false;
+});
+});
+	  
+</script>
+</HEAD>
+<BODY>
+<link rel=\'stylesheet\' type=\'text/css\' href=\'style.css\'>
+<div id=\'container\'>
+	 <div id=\'header\'>
+	 	 <center><img src=\'images/logo.jpg\' border=\'0\'></center>
+	 </div><HR />';
+
 if(isset($_SESSION['logged']))
 {
-	$query="SELECT Voto,amministratore FROM Utenti WHERE Username='".$_SESSION['logged']."'";
-	$result=mysql_query($query, $conn)
-	  or die("Query fallita!" . mysql_error());
-	$utente=mysql_fetch_array($result);
 
 	# echo $admin['amministratore'];
 	if ($utente['amministratore'])
@@ -106,24 +171,16 @@ echo ">1080p</option>
 <option value='2'";
 if($risoluzione==2) echo " selected=true ";
 echo ">720p</option>
-</select></p>"; # echo $risoluzione;
-if($risoluzione=='1' && $visti=='2')	$query="SELECT * FROM Film WHERE Film.risoluzione=1080";
-if($risoluzione=='2' && $visti=='2')	$query="SELECT * FROM Film WHERE Film.risoluzione=720";
-if($risoluzione=='1' && $visti=='1')	$query="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=1";
-if($risoluzione=='2' && $visti=='1')	$query="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=1";
-if($risoluzione=='1' && $visti=='0')	$query="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=0";
-if($risoluzione=='2' && $visti=='0')	$query="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=0";
-if($risoluzione=='1' && $visti==null)	$query="SELECT * FROM Film WHERE Film.risoluzione=1080 AND Film.visto=0";
-if($risoluzione=='2' && $visti==null)	$query="SELECT * FROM Film WHERE Film.risoluzione=720 AND Film.visto=0";
-if($visti=='2' && $risoluzione==0)	$query="SELECT * FROM Film";
-if($visti=='1' && $risoluzione==0)	$query="SELECT * FROM Film WHERE Film.visto=1";
-if($visti=='0' && $risoluzione==0)	$query="SELECT * FROM Film WHERE Film.visto=0";
-if($risoluzione=='0' && $visti==0 || $risoluzione==null && $visti==null)	$query="SELECT * FROM Film WHERE Film.visto=0";
+</select></p>";
 
 # End
 
-$result=mysql_query($query, $conn)
+$result=mysql_query($queryF, $conn)
   or die("Query fallita! " . mysql_error());
+
+echo 'Cerca: <input  name="query" type="text" id="faq_search_input" />
+	<span id="faq_category_title"></span>
+        <div id="searchresultdata" class="faq-articles">';//Div che viene svuotato e ri-riempito se si cerca attraverso il form
 
 echo "<TABLE width=\"100%\" border cellpadding=\"5\"><thead><th>Titolo</th><th>Risoluzione</th><th>Lingua</th><th>Durata</th><th>Visto</th><th>Vota</th></thead>";
 while($row=mysql_fetch_array($result))
@@ -143,7 +200,6 @@ while($row=mysql_fetch_array($result))
 }
 
 echo "</tbody></table>";
-# echo "<p align='center'>Visualizza i <a href='risultati.php'>risultati</a> <b>parziali</b></p>";
 
 
 echo '</div></BODY></HEAD></HTML>';

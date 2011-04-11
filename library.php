@@ -21,18 +21,9 @@ require("configure.php");
 
 /*inizio pagina*/
 function page_start($title) {
+
 echo "<HTML>
-<HEAD><TITLE>Project Lumi&eacute;re $title</TITLE>
-<link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico'>
-</head></HEAD>
-<BODY>
-<link rel='stylesheet' type='text/css' href='style.css'>
-<div id='container'>
-	 <div id='header'>
-	 	 <center><img src='images/logo.jpg' border='0'></center>
-	 </div>";
-if($title)
-	echo "<p align='right'><a href='index.php'><b>Home</b></a></p><HR />";
+<HEAD><TITLE>Project Lumi&eacute;re $title</TITLE><p align='right'><a href='index.php'><b>Home</b></a></p><HR />";
 };
 
 function page_end() {

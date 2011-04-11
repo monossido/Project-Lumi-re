@@ -35,8 +35,20 @@ Some code/libraries are used in the project:
 Libchart (GPL v3)
 	http://naku.dohcrew.com/libchart/
 
-Zend Framework 1.11.4 Release (r23791).
+Zend Framework
 Copyright (c) 2005-2010, Zend Technologies USA, Inc.
 All rights reserved.
 
-If you download Project Lumiére from sources you have to download the above two libraries in libchart/ and Zend/
+JQuery 
+ * Copyright (c) 2009 John Resig
+ * Dual licensed under the MIT and GPL licenses.
+ * http://docs.jquery.com/License
+http://jquery.com/
+
+Watermark plugin for jQuery (GPL V3)
+Copyright (c) 2009-2010 Todd Northrop
+http://code.google.com/p/jquery-watermark/
+
+If you download Project Lumiére from sources you have to download the above two libraries in libchart/ and Zend/ and two Javascript in js/
+
+Filter search mad in javascript by http://youhack.me/2010/04/28/creating-a-fancy-search-feature-with-php-mysql-and-jquery
