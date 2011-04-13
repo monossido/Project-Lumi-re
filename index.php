@@ -62,9 +62,16 @@ $("#faq_search_input").watermark("Begin Typing to Search");
 
 $("#faq_search_input").keyup(function()
 {
-var faq_search_input = $(this).val();
-var dataString = \'keyword=\'+ faq_search_input + \'&votazioni=\' + '.$stato['VotazioniAperte'].' + \'&round=\' + '.$stato['Round'].' + \'&voto=\' + '.$utente['Voto'].' + \'&query=\' + \''.$queryF.'\';
-if(faq_search_input.length>=0)
+var faq_search_input = $(this).val();';
+if(isset($_SESSION['logged']))
+	echo 'var dataString = \'keyword=\'+ faq_search_input + \'&votazioni=\' + 
+'.$stato['VotazioniAperte'].' + \'&round=\' + '.$stato['Round'].' + \'&voto=\' + 
+'.$utente['Voto'].' + \'&query=\' + \''.$queryF.'\';';
+else
+	echo 'var dataString = \'keyword=\'+ faq_search_input + \'&votazioni=\' +
+'.$stato['VotazioniAperte'].' + \'&round=\' + '.$stato['Round'].' + \'&voto=\' +
+0 + \'&query=\' + \''.$queryF.'\';';
+echo 'if(faq_search_input.length>=0)
 
 {
 $.ajax({

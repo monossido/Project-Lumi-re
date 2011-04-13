@@ -4,16 +4,6 @@ session_start();
 $conn=@mysqli_connect(dbhost, dbuser, dbpwd, dbname)
 	or die('Connessione al server MySQL fallita!');
 
-$query2='SELECT * FROM Stato';
-$result2=mysqli_query($conn,$query2)
-  or die('Query fallita!' . mysql_error());
-$stato= mysqli_fetch_array($result2,MYSQLI_ASSOC);
-
-$query="SELECT Voto,amministratore FROM Utenti WHERE Username='".$_SESSION['logged']."'";
-$result=mysqli_query($conn,$query)
-  or die("Query fallita!" . mysql_error());
-$utente= mysqli_fetch_array($result,MYSQLI_ASSOC);
-
 if(isset($_GET['keyword'])){//IF the url contains the parameter "keyword"
  $keyword =     trim($_GET['keyword']) ;//Remove any extra  space
 $keyword = mysqli_real_escape_string($conn, $keyword);//Some validation
